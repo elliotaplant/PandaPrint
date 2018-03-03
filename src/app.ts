@@ -18,7 +18,7 @@ function sendTwilioText() {
 }
 
 // Recieve post requests to the /sms endpoint
-app.post('/sms', (req, res) => {
+app.post('/sms', (req: , res) => {
   if (req.)
   const twiml = new twilio.MessagingResponse();
 
