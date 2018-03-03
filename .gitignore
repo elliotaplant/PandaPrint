@@ -1,2 +1,8 @@
+# Node modules
 node_modules
+
+# Compiled server
 dist
+
+# Twilio keys
+twilio-keys.json
