@@ -4,7 +4,7 @@ Print photos with a text message
 ## Pipelines
 
 ### SMS
-- Recieve SMS
+- Receive SMS
   - Known account
     - Has text
       - Is "Send it" message
@@ -41,3 +41,12 @@ Print photos with a text message
         - Reply with "received and link to signup page" message
       - Order not big enough to send
         - Reply with "received" message
+
+### HTTP
+- Is Signup form
+  - All unique info
+    - Save info to DB
+    - Send browser to "welcome" page
+    - Send welcome SMS to number
+  - Not all unique info
+    - Send back to signup page with error
