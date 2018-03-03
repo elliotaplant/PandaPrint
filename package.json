@@ -1,0 +1,16 @@
+{
+  "name": "pandaprint",
+  "version": "0.0.1",
+  "description": "Print photos with text messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "print",
+    "photo",
+    "twilio"
+  ],
+  "author": "elliotaplant@gmail.com",
+  "license": "ISC"
+}
