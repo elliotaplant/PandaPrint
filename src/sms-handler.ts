@@ -1,4 +1,6 @@
-export const moo = 'mooooooooo';
+/**
+  Handler for recieved sms messages
+ */
 
 export interface TwilioBody {
   Body: string;
@@ -7,8 +9,14 @@ export interface TwilioBody {
   MediaUrl2: string;
   // ... how to handle this?
 }
+
 export class SmsHandler {
   public handleSms(twilioBody: TwilioBody) {
 
+  }
+
+  // private methods
+  private hasText(twilioBody: TwilioBody): boolean {
+    
   }
 }
