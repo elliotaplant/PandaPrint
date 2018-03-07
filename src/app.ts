@@ -5,6 +5,7 @@ import DbClient from './db.client';
 import StatusPageActuator from './status-page.actuator';
 import MessageActuator from './message.actuator';
 import SignupActuator from './signup.actuator';
+import BillingActuator from './billing.actuator';
 import PpAccount from './pp-account.class';
 const twilioKeys = require('../twilio-keys.json');
 
@@ -12,7 +13,8 @@ const dbClient = new DbClient();
 const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY, process.env.PWINTY_ENV);
 const twilioClient = new TwilioClient(twilioKeys.accountSid, twilioKeys.authToken);
 const statusPageActuator = new StatusPageActuator(dbClient);
-const messageActuator = new MessageActuator(dbClient);
+const billingActuator = new BillingActuator();
+const messageActuator = new MessageActuator(dbClient, pwintyClient, billingActuator);
 const signupActuator = new SignupActuator(dbClient);
 
 const app = express();
