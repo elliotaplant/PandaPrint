@@ -1,59 +1,28 @@
 import * as _ from 'lodash';
 import DbClient from './db.client';
 import utils from './utils';
-import { PpAccount } from './types';
+import PpTwilioBody from './pp-twilio-body.class';
+import { TwilioBody, PpAccount } from './types';
 
 /**
   Handler for recieved messages
  */
 
-interface TwilioBody {
-  Body: string;
-  MediaUrl0: string;
-  MediaUrl1: string;
-  MediaUrl2: string;
-  MediaUrl3: string;
-  MediaUrl4: string;
-  MediaUrl5: string;
-  MediaUrl6: string;
-  MediaUrl7: string;
-  MediaUrl8: string;
-  MediaUrl9: string;
-}
-
-class PpTwilioBody {
-  constructor(public text: string, public mediaUrls: string[]) { }
-
-  get hasText(): boolean {
-    return !!this.text;
-  }
-
-  get hasPictures(): boolean {
-    return utils.safeGet(() => !!this.mediaUrls.length, false);
-  }
-
-  get isPricingMessage(): boolean {
-    return this.hasText && this.text.toLowerCase().includes('pric') || this.text.toLowerCase().includes('cost');
-  }
-
-  get isSendMessage(): boolean {
-    return this.hasText && this.text.toLowerCase().includes('send');
-  }
-
-  get isPictureOnlyMessage(): boolean {
-    return !this.hasText && this.hasPictures;
-  }
-}
-
 export default class MessageHandler {
   private errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
-  private welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be on their way!`;
+
+  private welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+
+  private welcomeNoPictures = `You've reached Panda Print! If you send us pictures, we'll print them out and send them to you. Give it a try now!`;
+
+
+  private unknownAddressMessage = `Unfortunately we can't send your order until we have your address. Could you go to www.PandaPrint.co to sign up? Thanks!`
 
   constructor(private dbClient: DbClient) { }
 
   // Handle an incoming message and return the response to send to the user
   public handleMessage(phone: string, twilioBody: TwilioBody): Promise<string> {
-    const ppTwilioBody = this.convertTwilioBodyToPpTwilioBody(twilioBody);
+    const ppTwilioBody = new PpTwilioBody(twilioBody);
 
     // Pull up user account from database
     return this.dbClient.loadAccountByPhone(phone)
@@ -102,21 +71,29 @@ export default class MessageHandler {
       .then(() => {
         if (twilioBody.hasPictures) {
           return this.welcomeWithPicturesMessage;
+        } else {
+          return this.welcomeNoPictures;
         }
-      })
-    //      Send welcome and pictures saved message
-    // If is text only message
-    //      Send "welcome to panda print" message
+      });
   }
 
   private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
-    // Use pwinty client to create and send order
-    // Use billing client to charge user
-    // Respond with promise of string
-    if (twilioBody.hasPictures) {
-      return Promise.resolve(this.savedAndSendingMessage(account));
+    if (account.isFullAccount) {
+      //Use pwinty client to create and send order
+      // Use billing client to charge user
+      // Respond with promise of string
+      if (twilioBody.hasPictures) {
+        return Promise.resolve(this.savedAndSendingMessage(twilioBody, account));
+      } else {
+        return Promise.resolve(this.sendingMessage(account));
+      }
+    } else {
+      if (twilioBody.hasPictures) {
+        return Promise.resolve(this.savedAndUnknownAddressMessage(twilioBody));
+      } else {
+        return Promise.resolve(this.unknownAddressMessage);
+      }
     }
-    return Promise.resolve(this.sendingMessage(account));
   }
 
   private handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
@@ -134,13 +111,9 @@ export default class MessageHandler {
     return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`
   }
 
-  private convertTwilioBodyToPpTwilioBody(twilioBody: TwilioBody): PpTwilioBody {
-    return new PpTwilioBody(twilioBody.Body, this.getMediaUrlsFromTwilioBody(twilioBody));
-  }
-
-  private savedAndSendingMessage(account: PpAccount): string {
+  private savedAndSendingMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
     // TODO: Add price to response
-    return `Thanks ${account.firstName}! We saved the new pictures. We'll print your order and send it to ${account.address.street1}.`
+    return `Thanks ${account.firstName}! We saved the new picture${utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.street1}.`
   }
 
   private sendingMessage(account: PpAccount): string {
@@ -148,14 +121,7 @@ export default class MessageHandler {
     return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.street1}.`
   }
 
-  private getMediaUrlsFromTwilioBody(twilioBody: TwilioBody): string[] {
-    const mediaUrls: string[] = [];
-    for (const anyKey in twilioBody) {
-      if (anyKey.startsWith('MediaUrl')) {
-        mediaUrls.push(utils.safeGet(() => (<any>twilioBody)[anyKey], null));
-      }
-    }
-
-    return _.filter(mediaUrls); // filter out null, empty, or undefined media urls
+  private savedAndUnknownAddressMessage(twilioBody: PpTwilioBody) {
+    return `We saved the new picture${utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`
   }
 }

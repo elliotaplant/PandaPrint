@@ -18,6 +18,10 @@ export class PpAccount {
     this.currentOrder = new Order();
     this.previousOrders = [];
   }
+
+  get isFullAccount(): boolean {
+    return !!(this.firstName && this.lastName && this.email && this.address && this.billingInfo)
+  }
 }
 
 export interface Address {
@@ -54,4 +58,20 @@ export interface BillingInfo {
   expMonth: string;
   expYear: string;
   securityCode: string;
+}
+
+// Twilio types
+
+export interface TwilioBody {
+  Body: string;
+  MediaUrl0: string;
+  MediaUrl1: string;
+  MediaUrl2: string;
+  MediaUrl3: string;
+  MediaUrl4: string;
+  MediaUrl5: string;
+  MediaUrl6: string;
+  MediaUrl7: string;
+  MediaUrl8: string;
+  MediaUrl9: string;
 }
