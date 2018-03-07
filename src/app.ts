@@ -1,6 +1,6 @@
 import * as express from 'express';
-import PwintyClient from './pwinty-client';
-import TwilioClient from './twilio-client';
+import PwintyClient from './pwinty.client';
+import TwilioClient from './twilio.client';
 import StatusPageHandler from './status-page.handler';
 const twilioKeys = require('../twilio-keys.json');
 
@@ -10,7 +10,7 @@ const statusPageHandler = new StatusPageHandler();
 
 const app = express();
 
-app.get('/status', (req, res) => {
+app.get('/', (req, res) => {
   // Send status page
   statusPageHandler.sendStatusPage(res);
 });
@@ -31,4 +31,4 @@ app.post('/signup', (req: any, res: any) => {
     // Send error response to requestor if error
 })
 
-app.listen(1337, () => console.log('Express server listening on port 1337'));
+app.listen(3000, () => console.log('Express server listening on port 1337'));
