@@ -15,9 +15,17 @@ export default class DbClient {
     });
   }
 
-  public createAccount(phone: string, name?: string, email?: string, address?: Address): Promise<PpAccount> {
+  public createAccount(newAccount: PpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
-      const newAccount = new PpAccount(phone);
+      this.accounts.set(newAccount.phone, newAccount);
+      const foundAccount = this.accounts.get(newAccount.phone);
+      resolve(foundAccount);
+    });
+  }
+
+  public createAccountFromPhone(phone: string): Promise<PpAccount> {
+    return new Promise(resolve => {
+      const newAccount = PpAccount.fromPhone(phone);
       this.accounts.set(newAccount.phone, newAccount);
       const foundAccount = this.accounts.get(newAccount.phone);
       resolve(foundAccount);

@@ -40,9 +40,7 @@ export default class MessageHandler {
         console.error(error);
         return this.errorApology;
       });
-
   }
-
 
   // private methods
   private handleMsgForExistingAccount(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
@@ -65,7 +63,7 @@ export default class MessageHandler {
 
   private handleMsgForNonExistantAccount(twilioBody: PpTwilioBody, phone: string): Promise<string> {
     // Create account with phone number
-    return this.dbClient.createAccount(phone)
+    return this.dbClient.createAccountFromPhone(phone)
       // Save any pictures to newly created account
       .then(createdAccount => this.dbClient.addPhotosToUsersCurrentOrder(twilioBody.mediaUrls, createdAccount.phone))
       // If has pictures message

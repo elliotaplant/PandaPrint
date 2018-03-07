@@ -1,4 +1,4 @@
-import { Order, Address, BillingInfo } from './types'
+import { Order, Address } from './types'
 /**
   Class to represent pandaprint accounts in memory
  */
@@ -11,26 +11,32 @@ export default class PpAccount {
   phone: string;
   currentOrder: Order;
   previousOrders: Order[];
-  billingInfo?: BillingInfo;
+  stripeCustId?: string;
 
-  constructor(phone: string) {
-    this.phone = phone;
+  constructor() {
     this.currentOrder = new Order();
     this.previousOrders = [];
   }
 
   get isFullAccount(): boolean {
-    return !!(this.firstName && this.lastName && this.email && this.address && this.billingInfo)
+    return !!(this.firstName && this.lastName && this.email && this.address && this.stripeCustId)
+  }
+
+  static fromPhone(phone: string): PpAccount {
+    const newAccount = new PpAccount();
+    newAccount.phone = phone;
+    return newAccount;
   }
 
   // This needs some work
-  static fromSignupForm(signupInfo: any): PpAccount { // signupInfo should be an interface
-    const newAccount = new PpAccount(signupInfo.phone);
+  static fromSignupFormRequest(signupInfo: any): PpAccount { // signupInfo should be an interface
+    const newAccount = new PpAccount();
+    newAccount.phone = signupInfo.phone;
     newAccount.firstName = signupInfo.firstName;
     newAccount.lastName = signupInfo.lastName;
     newAccount.email = signupInfo.email;
     newAccount.address = signupInfo.address;
-    newAccount.billingInfo = signupInfo.billingInfo;
+    newAccount.stripeCustId = signupInfo.stripeCustId;
     return newAccount;
   }
 }

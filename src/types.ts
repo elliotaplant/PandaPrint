@@ -11,6 +11,18 @@ export interface Address {
   zip: string;
 }
 
+export interface SignupAccountRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  street1: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
+  stripeToken: string;
+}
+
 
 // Order types
 export class Order {
@@ -31,16 +43,7 @@ export enum OrderStatus {
   Closed
 }
 
-// Billing types
-export interface BillingInfo {
-  cardNumber: string;
-  expMonth: string;
-  expYear: string;
-  securityCode: string;
-}
-
 // Twilio types
-
 export interface TwilioBody {
   Body: string;
   MediaUrl0: string;
