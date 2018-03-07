@@ -1,14 +1,18 @@
-import * as twilio from 'twilio';
 import * as express from 'express';
-const { accountSid, authToken } = require('../twilio-keys.json');
+import PwintyClient from './pwinty-client';
+import TwilioClient from './twilio-client';
+import StatusPageHandler from './status-page.handler';
+const twilioKeys = require('../twilio-keys.json');
+
+const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY, process.env.PWINTY_ENV);
+const twilioClient = new TwilioClient(twilioKeys.accountSid, twilioKeys.authToken);
+const statusPageHandler = new StatusPageHandler();
 
 const app = express();
 
-// Put in message handler
-const client = new twilio.RestClient(accountSid, authToken);
-
 app.get('/status', (req, res) => {
   // Send status page
+  statusPageHandler.sendStatusPage(res);
 });
 
 // Recieve post requests to the /sms endpoint
@@ -27,4 +31,4 @@ app.post('/signup', (req: any, res: any) => {
     // Send error response to requestor if error
 })
 
-app.listen(1337, () => console.log('Express server listening on port 1337'))
+app.listen(1337, () => console.log('Express server listening on port 1337'));

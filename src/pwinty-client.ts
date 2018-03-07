@@ -1,11 +1,10 @@
+// Must require pwinty since it doesn't have @types
+const pwintyInit = require('pwinty');
 /**
-A client to interact with the pwinty API
+  A client to interact with the pwinty API
 */
 
-// Must require pwinty since it doesn't have @types
-const pwintyInit = require('pwinty')
-
-export class PwintyClient {
+export default class PwintyClient {
   private pwinty: any;
   private currentOrder: any;
 
