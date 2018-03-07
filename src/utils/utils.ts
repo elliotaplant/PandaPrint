@@ -14,6 +14,7 @@ export class Utils {
     if (foundValue === undefined) {
       return defaultValue;
     }
+    return foundValue;
   }
 
   // Utility to return the 's' character if the number is not === 1
