@@ -1,4 +1,6 @@
-import { Address, PpAccount, Order } from './types';
+import { Address, Order } from './types';
+import PpAccount from './pp-account.class';
+
 /**
   A client for interacting with the database
   */

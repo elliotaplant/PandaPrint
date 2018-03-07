@@ -2,7 +2,8 @@ import * as _ from 'lodash';
 import DbClient from './db.client';
 import utils from './utils';
 import PpTwilioBody from './pp-twilio-body.class';
-import { TwilioBody, PpAccount } from './types';
+import PpAccount from './pp-account.class';
+import { TwilioBody } from './types';
 
 /**
   Handler for recieved messages

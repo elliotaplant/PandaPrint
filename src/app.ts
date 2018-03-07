@@ -23,12 +23,15 @@ app.get('/', (req, res) => {
 app.post('/sms', (req: any, res: any) => {
   // Handle message with message handler
   messageHandler.handleMessage(req.phone, req.body)
+    .then(replyMessage => res.send(replyMessage))
+    // TODO: add error handler to app
+    .catch(e => res.send('Hmm, something went wrong. We\'ll get back to you soon to fix it'));
 });
 
 app.post('/signup', (req: any, res: any) => {
   // Save user to DB
-    // If fails, try sending error to phone number or email
-      // If fails, damn
+  dbClient.createAccount(req.account)
+    .then
   // Send user a welcome text
     // If fails, try sending error to email
       // If fails, damn

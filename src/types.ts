@@ -3,27 +3,6 @@
   */
 
 // User account info
-export class PpAccount {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  address?: Address;
-  phone: string;
-  currentOrder: Order;
-  previousOrders: Order[];
-  billingInfo?: BillingInfo;
-
-  constructor(phone: string) {
-    this.phone = phone;
-    this.currentOrder = new Order();
-    this.previousOrders = [];
-  }
-
-  get isFullAccount(): boolean {
-    return !!(this.firstName && this.lastName && this.email && this.address && this.billingInfo)
-  }
-}
-
 export interface Address {
   street1: string;
   street2?: string;
