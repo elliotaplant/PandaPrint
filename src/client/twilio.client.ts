@@ -4,7 +4,7 @@ import * as twilio from 'twilio';
   A client to interact with the twilio API
 */
 
-export default class TwilioClient {
+export class TwilioClient {
   private twilio: any;
   private currentOrder: any;
 

@@ -3,7 +3,7 @@
  */
 
 
-export default class StripeClient {
+export class StripeClient {
   public chargeCustomer(customerId: string, amount: number) {
     return Promise.resolve(true);
   }

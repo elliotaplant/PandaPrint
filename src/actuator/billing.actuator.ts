@@ -1,10 +1,9 @@
-import { Order } from './types';
-import PpAccount from './pp-account.class';
+import { Order, PpAccount } from '../type';
 /**
   Actuator for billing
  */
 
- export default class BillingActuator {
+ export class BillingActuator {
    private shippingPrice = 3.49; // USD price of shipping
    private pricePerPhoto = 0.49; // USD price per photo
 

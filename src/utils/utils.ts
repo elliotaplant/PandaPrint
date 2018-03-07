@@ -1,6 +1,6 @@
 // Utility methods that aren't in lodash
 
-export default class Utils {
+export class Utils {
 
   // Safe getter utility for uncertain property lookups
   static safeGet<T>(getFn: () => T, defaultValue: T): T {

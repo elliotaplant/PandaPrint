@@ -1,9 +1,9 @@
-import DbClient from './db.client';
+import { DbClient } from '../client';
 /**
   A actuator for displaying the app status
   */
 
-export default class StatusPageActuator {
+export class StatusPageActuator {
   constructor(private dbClient: DbClient) { }
   public sendStatusPage(res: any) {
     res.set('Content-Type', 'text/html; charset=utf-8');

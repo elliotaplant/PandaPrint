@@ -1,12 +1,7 @@
 import * as express from 'express';
-import PwintyClient from './pwinty.client';
-import TwilioClient from './twilio.client';
-import DbClient from './db.client';
-import StatusPageActuator from './status-page.actuator';
-import MessageActuator from './message.actuator';
-import SignupActuator from './signup.actuator';
-import BillingActuator from './billing.actuator';
-import PpAccount from './pp-account.class';
+import { PwintyClient, TwilioClient, DbClient } from './client';
+import { StatusPageActuator, MessageActuator, SignupActuator, BillingActuator } from './actuator';
+import { PpAccount } from './type';
 const twilioKeys = require('../twilio-keys.json');
 
 const dbClient = new DbClient();

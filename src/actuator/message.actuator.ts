@@ -1,17 +1,14 @@
 import * as _ from 'lodash';
-import DbClient from './db.client';
-import PwintyClient from './pwinty.client';
-import BillingActuator from './billing.actuator';
-import utils from './utils';
-import PpTwilioBody from './pp-twilio-body.class';
-import PpAccount from './pp-account.class';
-import { TwilioBody } from './types';
+import { DbClient, PwintyClient } from '../client';
+import {BillingActuator} from './billing.actuator';
+import {Utils} from '../utils';
+import { TwilioBody, PpAccount, PpTwilioBody } from '../type';
 
 /**
   Actuator for recieved messages
  */
 
-export default class MessageActuator {
+export class MessageActuator {
   private errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
 
   private welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
@@ -104,13 +101,13 @@ export default class MessageActuator {
 
   private handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
     // TODO: Add price
-    return `We saved your picture${utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`
+    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`
   }
 
   private handlePricingMessage(account: PpAccount) {
     // TODO: Add billing utils to determine order price
     const numPicsInOrder = account.currentOrder.pictureUrls.length;
-    return `You have ${numPicsInOrder} picture${utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`
+    return `You have ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`
   }
 
   private handleUnknownTextMessage() {
@@ -119,7 +116,7 @@ export default class MessageActuator {
 
   private savedAndSendingMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
     // TODO: Add price to response
-    return `Thanks ${account.firstName}! We saved the new picture${utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.street1}.`
+    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.street1}.`
   }
 
   private sendingMessage(account: PpAccount): string {
@@ -128,6 +125,6 @@ export default class MessageActuator {
   }
 
   private savedAndUnknownAddressMessage(twilioBody: PpTwilioBody) {
-    return `We saved the new picture${utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`
+    return `We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`
   }
 }

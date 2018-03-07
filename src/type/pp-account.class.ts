@@ -1,9 +1,9 @@
-import { Order, Address } from './types'
+import { Order, Address } from '../type'
 /**
   Class to represent pandaprint accounts in memory
  */
 
-export default class PpAccount {
+export class PpAccount {
   firstName?: string;
   lastName?: string;
   email?: string;

@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
-import { TwilioBody } from './types';
-import utils from './utils';
+import { TwilioBody } from '../type';
+import { Utils } from '../utils';
 
 /**
   Class to make interacting with twilio messages easier
   */
-export default class PpTwilioBody {
+export class PpTwilioBody {
   text: string;
   mediaUrls: string[];
 
@@ -19,7 +19,7 @@ export default class PpTwilioBody {
   }
 
   get hasPictures(): boolean {
-    return utils.safeGet(() => !!this.mediaUrls.length, false);
+    return Utils.safeGet(() => !!this.mediaUrls.length, false);
   }
 
   get isPricingMessage(): boolean {
@@ -38,7 +38,7 @@ export default class PpTwilioBody {
     const mediaUrls: string[] = [];
     for (const anyKey in twilioBody) {
       if (anyKey.startsWith('MediaUrl')) {
-        mediaUrls.push(utils.safeGet(() => (<any>twilioBody)[anyKey], null));
+        mediaUrls.push(Utils.safeGet(() => (<any>twilioBody)[anyKey], null));
       }
     }
 

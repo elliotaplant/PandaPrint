@@ -1,4 +1,4 @@
-import { Order } from './types';
+import { Order } from '../type';
 
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
@@ -6,7 +6,7 @@ const pwintyInit = require('pwinty');
   A client to interact with the pwinty API
 */
 
-export default class PwintyClient {
+export class PwintyClient {
   private pwinty: any;
   private currentOrder: any;
 

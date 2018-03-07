@@ -1,12 +1,11 @@
-import DbClient from './db.client';
-import MessageActuator from './message.actuator';
-import PpAccount from './pp-account.class';
-import { SignupAccountRequest } from './types';
+import { DbClient } from '../client';
+import { MessageActuator } from '../actuator';
+import { PpAccount, SignupAccountRequest } from '../type';
 /**
   Actuator for signups from the front end
  */
 
-export default class SignupActuator {
+export class SignupActuator {
   constructor(private dbClient: DbClient) { }
 
   // This can be better

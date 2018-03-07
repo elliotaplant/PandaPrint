@@ -1,11 +1,10 @@
-import { Address, Order } from './types';
-import PpAccount from './pp-account.class';
+import { Address, Order, PpAccount } from '../type';
 
 /**
   A client for interacting with the database
   */
 
-export default class DbClient {
+export class DbClient {
   private accounts: Map<string, PpAccount> = new Map();
 
   public loadAccountByPhone(phone: string): Promise<PpAccount> {
