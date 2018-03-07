@@ -6,10 +6,10 @@ import PpAccount from './pp-account.class';
 import { TwilioBody } from './types';
 
 /**
-  Handler for recieved messages
+  Actuator for recieved messages
  */
 
-export default class MessageHandler {
+export default class MessageActuator {
   private errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
 
   private welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;

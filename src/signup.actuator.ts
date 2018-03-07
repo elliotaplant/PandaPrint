@@ -1,12 +1,12 @@
 import DbClient from './db.client';
-import MessageHandler from './message.handler';
+import MessageActuator from './message.actuator';
 import PpAccount from './pp-account.class';
 import { SignupAccountRequest } from './types';
 /**
-  Handler for signups from the front end
+  Actuator for signups from the front end
  */
 
-export default class SignupHandler {
+export default class SignupActuator {
   constructor(private dbClient: DbClient) { }
 
   // This can be better
