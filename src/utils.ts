@@ -7,12 +7,17 @@ export default class Utils {
     let foundValue;
     try {
       foundValue = getFn();
-    } catch(e) {
+    } catch (e) {
       foundValue = undefined;
     }
 
     if (foundValue === undefined) {
       return defaultValue;
     }
+  }
+
+  // Utility to return the 's' character if the number is not === 1
+  static sIfPlural(ammount: number): string {
+    return ammount === 1 ? '' : 's';
   }
 }

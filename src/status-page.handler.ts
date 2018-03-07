@@ -1,8 +1,10 @@
+import DbClient from './db.client';
 /**
   A handler for displaying the app status
   */
 
 export default class StatusPageHandler {
+  constructor(private dbClient: DbClient) { }
   public sendStatusPage(res: any) {
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(
