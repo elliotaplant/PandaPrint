@@ -1,5 +1,7 @@
 import * as _ from 'lodash';
 import DbClient from './db.client';
+import PwintyClient from './pwinty.client';
+import BillingActuator from './billing.actuator';
 import utils from './utils';
 import PpTwilioBody from './pp-twilio-body.class';
 import PpAccount from './pp-account.class';
@@ -19,7 +21,7 @@ export default class MessageActuator {
 
   private unknownAddressMessage = `Unfortunately we can't send your order until we have your address. Could you go to www.PandaPrint.co to sign up? Thanks!`
 
-  constructor(private dbClient: DbClient) { }
+  constructor(private dbClient: DbClient, private pwintyClient: PwintyClient, private billingActuator: BillingActuator) { }
 
   // Handle an incoming message and return the response to send to the user
   public handleMessage(phone: string, twilioBody: TwilioBody): Promise<string> {
@@ -78,14 +80,19 @@ export default class MessageActuator {
 
   private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
     if (account.isFullAccount) {
-      //Use pwinty client to create and send order
-      // Use billing client to charge user
-      // Respond with promise of string
-      if (twilioBody.hasPictures) {
-        return Promise.resolve(this.savedAndSendingMessage(twilioBody, account));
-      } else {
-        return Promise.resolve(this.sendingMessage(account));
-      }
+      // Use pwinty client to create and send order
+      this.pwintyClient.sendOrderToPwinty(account.currentOrder)
+        // Use billing client to charge user
+        .then(() => this.billingActuator.chargeCustomerForOrder(account.currentOrder))
+        .then(() => {
+          // Respond with promise of string
+          if (twilioBody.hasPictures) {
+            return Promise.resolve(this.savedAndSendingMessage(twilioBody, account));
+          } else {
+            return Promise.resolve(this.sendingMessage(account));
+          }
+        })
+        .catch(error => 'Hmm, something went wrong when we tried to send your order. We\'ll look into it and get back to you. If you have any questions, reach out to Elliot at (510) 917-5552');
     } else {
       if (twilioBody.hasPictures) {
         return Promise.resolve(this.savedAndUnknownAddressMessage(twilioBody));

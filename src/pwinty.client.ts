@@ -1,3 +1,5 @@
+import { Order } from './types';
+
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
 /**
@@ -12,6 +14,10 @@ export default class PwintyClient {
 
   public init() {
     this.pwinty = pwintyInit(this.merchantId, this.apiKey, `https://${this.env}.pwinty.com/v2.5/`);
+  }
+
+  public sendOrderToPwinty(order: Order) {
+    return Promise.resolve(true);
   }
 
   public createPwintyOrderIfNecessary() {
