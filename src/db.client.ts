@@ -1,12 +1,10 @@
-import { PpAccount } from './types';
+import { Address, PpAccount, Order } from './types';
 /**
   A client for interacting with the database
   */
 
 export default class DbClient {
   private accounts: Map<string, PpAccount> = new Map();
-
-  constructor() { }
 
   public loadAccountByPhone(phone: string): Promise<PpAccount> {
     return new Promise(resolve => {
@@ -15,8 +13,9 @@ export default class DbClient {
     });
   }
 
-  public createAccount(newAccount: PpAccount): Promise<PpAccount> {
+  public createAccount(phone: string, name?: string, email?: string, address?: Address): Promise<PpAccount> {
     return new Promise(resolve => {
+      const newAccount = new PpAccount(phone);
       this.accounts.set(newAccount.phone, newAccount);
       const foundAccount = this.accounts.get(newAccount.phone);
       resolve(foundAccount);

@@ -47,6 +47,7 @@ class PpTwilioBody {
 
 export default class MessageHandler {
   private errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
+  private welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be on their way!`;
 
   constructor(private dbClient: DbClient) { }
 
@@ -75,35 +76,37 @@ export default class MessageHandler {
 
   // private methods
   private handleMsgForExistingAccount(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
-    // Save any pictures to user's current order
+    // First, save any pictures to the user's current order
     return this.dbClient.addPhotosToUsersCurrentOrder(twilioBody.mediaUrls, account.phone)
       .then(account => {
+        // Handle the message as depending on the text content (or lack thereof)
         if (twilioBody.isPricingMessage) {
+          // Note that pricing comes before send messages, just in case the user does both but is confused about price
           return this.handlePricingMessage(account);
         } else if (twilioBody.isSendMessage) {
           return this.handleSendMessage(twilioBody, account);
         } else if (twilioBody.isPictureOnlyMessage) {
           return this.handlePicturesOnlyMessage(twilioBody, account);
         } else {
-
+          return this.handleUnknownTextMessage();
         }
       });
-
-    //    If message is a "send" message
-    //      Handle send message
-    //    If message is only a picture message
-    //      handle picture only message
-    //    If message is a non-send text message
-    //      handle unknown text response
   }
 
   private handleMsgForNonExistantAccount(twilioBody: PpTwilioBody, phone: string): Promise<string> {
-    //    Create account with phone number
-    //    Save any pictures to user's current order
-    //    If is text only message
-    //      Send "welcome to panda print" message
-    //    If has pictures message
+    // Create account with phone number
+    return this.dbClient.createAccount(phone)
+      // Save any pictures to newly created account
+      .then(createdAccount => this.dbClient.addPhotosToUsersCurrentOrder(twilioBody.mediaUrls, createdAccount.phone))
+      // If has pictures message
+      .then(() => {
+        if (twilioBody.hasPictures) {
+          return this.welcomeWithPicturesMessage;
+        }
+      })
     //      Send welcome and pictures saved message
+    // If is text only message
+    //      Send "welcome to panda print" message
   }
 
   private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
@@ -127,12 +130,8 @@ export default class MessageHandler {
     return `You have ${numPicsInOrder} picture${utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`
   }
 
-  private handleImages(imageUrls: string[]): string | null {
-    return 'images handled';
-  }
-
-  private handleText(twilioBody: TwilioBody): string | null {
-    return 'text handled';
+  private handleUnknownTextMessage() {
+    return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`
   }
 
   private convertTwilioBodyToPpTwilioBody(twilioBody: TwilioBody): PpTwilioBody {

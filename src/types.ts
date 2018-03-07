@@ -3,7 +3,7 @@
   */
 
 // User account info
-export interface PpAccount {
+export class PpAccount {
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -12,6 +12,12 @@ export interface PpAccount {
   currentOrder: Order;
   previousOrders: Order[];
   billingInfo?: BillingInfo;
+
+  constructor(phone: string) {
+    this.phone = phone;
+    this.currentOrder = new Order();
+    this.previousOrders = [];
+  }
 }
 
 export interface Address {
@@ -24,11 +30,16 @@ export interface Address {
 
 
 // Order types
-export interface Order {
+export class Order {
   pictureUrls: string[];
   status: OrderStatus;
-  sendDate: number;
-  arriveDate: number;
+  sendDate?: number;
+  arriveDate?: number;
+
+  constructor() {
+    this.pictureUrls = [];
+    this.status = OrderStatus.Open;
+  }
 }
 
 export enum OrderStatus {
