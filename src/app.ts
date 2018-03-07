@@ -1,31 +1,30 @@
 import * as twilio from 'twilio';
 import * as express from 'express';
 const { accountSid, authToken } = require('../twilio-keys.json');
-// const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const app = express();
 
+// Put in message handler
 const client = new twilio.RestClient(accountSid, authToken);
 
-function sendTwilioText() {
-  client.messages.create({
-    body: 'Hello from Node',
-    to: '+15109175552',  // Personal number
-    from: '+14155793449' // My twilio number
-  })
-  .then((message) => console.log(message.sid))
-  .catch(error => console.error('No good', error));
-}
+app.get('/status', (req, res) => {
+  // Send status page
+});
 
 // Recieve post requests to the /sms endpoint
-app.post('/sms', (req: , res) => {
-  if (req.)
-  const twiml = new twilio.MessagingResponse();
-
-  twiml.message('The Robots are coming! Head for the hills!');
-
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(twiml.toString());
+app.post('/sms', (req: any, res: any) => {
+  // Handle message with message handler
 });
+
+app.post('/signup', (req: any, res: any) => {
+  // Save user to DB
+    // If fails, try sending error to phone number or email
+      // If fails, damn
+  // Send user a welcome text
+    // If fails, try sending error to email
+      // If fails, damn
+  // Send 200 response to requestor
+    // Send error response to requestor if error
+})
 
 app.listen(1337, () => console.log('Express server listening on port 1337'))

@@ -102,7 +102,15 @@ function addPhotoToPwintyOrder(photoUrl) {
   if (!currentOrder) {
     throw new Error('No order exists to add photo');
   }
-  const photo = Object.assign({type: "4x6", url: photoUrl, copies: "1", sizing: "Crop"});
+  const photo = Object.assign({
+    type: "4x6",
+    url: photoUrl,
+    copies: "1",
+    sizing: "Crop",
+    attributes: {
+      finish: 'glossy',
+    }
+  });
 
   return new Promise((resolve, reject) => {
     pwinty.addPhotoToOrder(currentOrder.id, photo, function(err) {
@@ -147,9 +155,6 @@ function mailingAddress() {
   return {
     countryCode: 'US',
     qualityLevel: 'Standard',
-    attributes: {
-      finish: 'glossy',
-    },
     recipientName: 'Amber Fearon',
     address1: '3705 Florida Ct. Unit E',
     addressTownOrCity: 'North Chicago',
