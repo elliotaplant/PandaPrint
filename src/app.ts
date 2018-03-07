@@ -41,4 +41,4 @@ app.post('/signup', (req: any, res: any) => {
     .catch(() => res.send('500')); // send error
 })
 
-app.listen(3000, () => console.log('Express server listening on port 1337'));
+app.listen(3000, () => console.log('Express server listening on port 3000'));
