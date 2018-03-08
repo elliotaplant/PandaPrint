@@ -15,7 +15,6 @@ describe('BillingActuator', () => {
   });
 
   describe('Price Calculation', () => {
-
     it('should calculate price of order accurately', () => {
       const fourPicOrder = new Order();
       fourPicOrder.pictureUrls.push(...['pic1', 'pic2', 'pic3', 'pic4']);
@@ -44,13 +43,10 @@ describe('BillingActuator', () => {
     });
 
     describe('Valid charges', () => {
-
       beforeEach(() => {
         account.stripeCustId = 'id123';
         order.pictureUrls.push(...['a', 'b', 'c']);
       });
-
-
 
       it('should use the stripe api to charge a customer', (done) => {
         billingActuator.chargeCustomerForOrder(account, order)
@@ -60,8 +56,6 @@ describe('BillingActuator', () => {
           })
           .catch(done);
       });
-
-
 
       it('should charge the right customer the right amoung', (done) => {
         billingActuator.chargeCustomerForOrder(account, order)
@@ -75,7 +69,6 @@ describe('BillingActuator', () => {
     });
 
     describe('Invalid charges', () => {
-
       afterEach(() => {
         expect(stripeChargeStub.notCalled).to.be.true;
       })
@@ -102,7 +95,5 @@ describe('BillingActuator', () => {
         }
       });
     });
-
-
   });
 });
