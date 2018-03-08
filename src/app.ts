@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { PwintyClient, TwilioClient, DbClient } from './client';
+import { PwintyClient, StripeClient, TwilioClient, DbClient } from './client';
 import { StatusPageActuator, MessageActuator, SignupActuator, BillingActuator } from './actuator';
 import { PpAccount } from './type';
 const twilioKeys = require('../twilio-keys.json');
@@ -7,8 +7,9 @@ const twilioKeys = require('../twilio-keys.json');
 const dbClient = new DbClient();
 const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY, process.env.PWINTY_ENV);
 const twilioClient = new TwilioClient(twilioKeys.accountSid, twilioKeys.authToken);
+const stripeClient = new StripeClient();
 const statusPageActuator = new StatusPageActuator(dbClient);
-const billingActuator = new BillingActuator();
+const billingActuator = new BillingActuator(stripeClient);
 const messageActuator = new MessageActuator(dbClient, pwintyClient, billingActuator);
 const signupActuator = new SignupActuator(dbClient);
 
