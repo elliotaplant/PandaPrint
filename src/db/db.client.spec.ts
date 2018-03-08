@@ -49,6 +49,38 @@ describe('Db Client', () => {
         .then(() => done())
         .catch(done);
     });
+  });
 
-  })
+  describe('Account updating', () => {
+    it('should update an account with shipping and billing info', (done) => {
+      const mikeJonesPhone = '+12813308004';
+      const mikeJonesInfo = PpAccount.fromSignupFormRequest({
+        phone: '+12813308004',
+        email: 'mike@jones.org',
+        street1: 'who?',
+        street2: 'mike jones',
+        city: 'East Atlana',
+        state: 'GA',
+        zip: '90210',
+        firstName: 'Mike',
+        lastName: 'Jones',
+        stripeCustId: 'FLOSSIN'
+      });
+
+      dbClient.createAccountFromPhone(mikeJonesPhone)
+        .then(createdAccount => {
+          expect(createdAccount.phone).to.equal(mikeJonesPhone);
+          expect(createdAccount.firstName).to.be.undefined;
+          return dbClient.updateAccount(mikeJonesInfo);
+        })
+        .then(updatedAccount => {
+          expect(updatedAccount.phone).to.equal(mikeJonesPhone);
+          expect(updatedAccount.firstName).to.equal(mikeJonesInfo.firstName);
+          expect(updatedAccount.address.street1).to.equal(mikeJonesInfo.address.street1);
+          expect(updatedAccount.stripeCustId).to.equal(mikeJonesInfo.stripeCustId);
+        })
+        .then(() => done())
+        .catch(done);
+    });
+  });
 });
