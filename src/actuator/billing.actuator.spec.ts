@@ -1,16 +1,20 @@
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
+import { StripeClient } from '../client';
 import { Order } from '../type';
 
 // Spec file for BillingActuator
 describe('BillingActuator', () => {
+  let billingActuator: BillingActuator;
+  let stripeClient: StripeClient;
+
+  beforeEach(() => {
+    stripeClient = new StripeClient();
+    billingActuator = new BillingActuator(stripeClient);
+  });
 
   describe('Price Calculation', () => {
-    let billingActuator: BillingActuator;
-
-    beforeEach(() => {
-      billingActuator = new BillingActuator();
-    });
 
     it('should calculate price of order accurately', () => {
       const fourPicOrder = new Order();
@@ -24,6 +28,17 @@ describe('BillingActuator', () => {
       const emptyOrder = new Order();
       const calculatedPrice = billingActuator.calculatePriceForOrder(emptyOrder);
       expect(calculatedPrice).to.equal(0);
+    });
+  });
+
+  describe('Customer charging', () => {
+    beforeEach(() => {
+      const moo = () => Promise.resolve(true);
+      // const stripeChargeSpy = sinon.stub(stripeClient, 'chargeCustomer', () => Promise.resolve(true));
+    });
+
+    it('should use the stripe api to charge a customer', () => {
+
     });
   });
 });
