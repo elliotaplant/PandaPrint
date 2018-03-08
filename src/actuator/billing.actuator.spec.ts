@@ -43,25 +43,52 @@ describe('BillingActuator', () => {
       stripeChargeStub = sinon.stub(stripeClient, 'chargeCustomer').returns(Promise.resolve(true));
     });
 
-    it('should use the stripe api to charge a customer', (done) => {
-      billingActuator.chargeCustomerForOrder(account, order)
-        .then(() => {
-          expect(stripeChargeStub.calledOnce).to.be.true;
-          done();
-        })
-        .catch(done);
+    describe('Valid charges', () => {
+
+      beforeEach(() => {
+        account.stripeCustId = 'id123';
+        order.pictureUrls.push(...['a', 'b', 'c']);
+      });
+
+
+
+      it('should use the stripe api to charge a customer', (done) => {
+        billingActuator.chargeCustomerForOrder(account, order)
+          .then(() => {
+            expect(stripeChargeStub.calledOnce).to.be.true;
+            done();
+          })
+          .catch(done);
+      });
+
+
+
+      it('should charge the right customer the right amoung', (done) => {
+        billingActuator.chargeCustomerForOrder(account, order)
+          .then(() => {
+            expect(stripeChargeStub.calledWith(account.stripeCustId,
+              billingActuator.calculatePriceForOrder(order))).to.be.true;
+            done();
+          })
+          .catch(done);
+      });
     });
 
-    it('should charge the right customer the right amoung', (done) => {
-      account.stripeCustId = 'id123';
-      order.pictureUrls.push(...['a', 'b', 'c']);
-      billingActuator.chargeCustomerForOrder(account, order)
-        .then(() => {
-          expect(stripeChargeStub.calledWith(account.stripeCustId,
-            billingActuator.calculatePriceForOrder(order))).to.be.true;
+    describe('Invalid charges', () => {
+
+      it('should throw an error if trying to charge customer for empty order', (done) => {
+        account.stripeCustId = 'id123';
+        try {
+          billingActuator.chargeCustomerForOrder(account, order)
+          done(new Error('Expected customer charge to fail for empty order'));
+        } catch (error) {
+          expect(error.message.toLowerCase()).to.contain('empty order');
+          expect(stripeChargeStub.notCalled).to.be.true;
           done();
-        })
-        .catch(done);
+        }
+      });
     });
+
+
   });
 });

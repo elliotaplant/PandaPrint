@@ -35,6 +35,10 @@ export class Order {
     this.pictureUrls = [];
     this.status = OrderStatus.Open;
   }
+
+  get isEmptyOrder(): boolean {
+    return this.pictureUrls.length === 0;
+  }
 }
 
 export enum OrderStatus {
