@@ -8,6 +8,8 @@ import { PwintyClient } from '../printing';
 
 // Spec file for BillingActuator
 describe('Message Actuator', () => {
+  const examplePhone = '+12813308004';
+
   let messageActuator: MessageActuator;
   let mockBillingActuator: MockBillingActuator;
   let dbClient: DbClient;
@@ -20,14 +22,23 @@ describe('Message Actuator', () => {
     messageActuator = new MessageActuator(dbClient, pwintyClient, mockBillingActuator);
   });
 
-  describe('Price Calculation', () => {
-    it('should calculate price of order accurately', () => {
-      const fourPicOrder = new Order();
-      fourPicOrder.pictureUrls.push(...['pic1', 'pic2', 'pic3', 'pic4']);
+  describe('Handling messages', () => {
+    describe('Known Account', () => {
 
-      const calculatedPrice = mockBillingActuator.calculatePriceForOrder(fourPicOrder);
-      // hard code in price calculation. Shouls this test be less brittle?
-      expect(calculatedPrice).to.equal(3.49 + 4 * 0.49);
+      beforeEach((done) => {
+        dbClient.createAccountFromPhone(examplePhone)
+          .then(() => done())
+          .catch(done);
+      });
+
+      it('should be confused about text only messages', (done) => {
+        messageActuator.handleMessage(examplePhone, { Body: 'Hi' })
+          .then(confusedResponse => {
+            expect(confusedResponse).to.equal(messageActuator.unknownMessageResponse())
+            done();
+          })
+          .catch(done);
+      });
     });
   });
 });
