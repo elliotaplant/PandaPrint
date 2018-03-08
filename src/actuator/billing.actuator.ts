@@ -17,8 +17,7 @@ export class BillingActuator {
     return this.shippingPrice + order.pictureUrls.length * this.pricePerPhoto;
   }
 
-  public chargeCustomerForOrder(order: Order) {
-    // return stripeClient.chargeCustomer(account.stripeCustId, this.calculatePriceForOrder(order));
-    return Promise.resolve(true);
+  public chargeCustomerForOrder(account: PpAccount, order: Order) {
+    return this.stripeClient.chargeCustomer(account.stripeCustId, this.calculatePriceForOrder(order));
   }
 }

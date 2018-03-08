@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
 import { StripeClient } from '../client';
-import { Order } from '../type';
+import { Order, PpAccount } from '../type';
 
 // Spec file for BillingActuator
 describe('BillingActuator', () => {
@@ -32,12 +32,23 @@ describe('BillingActuator', () => {
   });
 
   describe('Customer charging', () => {
+    let stripeChargeStub: sinon.SinonStub;
+    let account: PpAccount;
+    let order: Order;
+
     beforeEach(() => {
-      const moo = () => Promise.resolve(true);
-      // const stripeChargeSpy = sinon.stub(stripeClient, 'chargeCustomer', () => Promise.resolve(true));
+      account = new PpAccount();
+      order = new Order();
+      stripeChargeStub = sinon.stub(stripeClient, 'chargeCustomer').returns(Promise.resolve(true));
     });
 
-    it('should use the stripe api to charge a customer', () => {
+    it('should use the stripe api to charge a customer', (done) => {
+      billingActuator.chargeCustomerForOrder(account, order)
+        .then(() => {
+          expect(stripeChargeStub.calledOnce).to.be.true;
+          done();
+        })
+        .catch(done);
 
     });
   });
