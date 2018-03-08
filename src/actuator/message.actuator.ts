@@ -80,7 +80,7 @@ export class MessageActuator {
       // Use pwinty client to create and send order
       this.pwintyClient.sendOrderToPwinty(account.currentOrder)
         // Use billing client to charge user
-        .then(() => this.billingActuator.chargeCustomerForOrder(account.currentOrder))
+        .then(() => this.billingActuator.chargeCustomerForOrder(account, account.currentOrder))
         .then(() => {
           // Respond with promise of string
           if (twilioBody.hasPictures) {
