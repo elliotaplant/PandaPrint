@@ -3,7 +3,7 @@ import { DbClient } from '../db';
   A actuator for displaying the app status
   */
 
-export class StatusPageActuator {
+export class StatusActuator {
   constructor(private dbClient: DbClient) { }
   public sendStatusPage(res: any) {
     res.set('Content-Type', 'text/html; charset=utf-8');
