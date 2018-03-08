@@ -21,6 +21,7 @@ describe('BillingActuator', () => {
       fourPicOrder.pictureUrls.push(...['pic1', 'pic2', 'pic3', 'pic4']);
 
       const calculatedPrice = billingActuator.calculatePriceForOrder(fourPicOrder);
+      // hard code in price calculation. Shouls this test be less brittle?
       expect(calculatedPrice).to.equal(3.49 + 4 * 0.49);
     });
 
@@ -49,7 +50,18 @@ describe('BillingActuator', () => {
           done();
         })
         .catch(done);
+    });
 
+    it('should charge the right customer the right amoung', (done) => {
+      account.stripeCustId = 'id123';
+      order.pictureUrls.push(...['a', 'b', 'c']);
+      billingActuator.chargeCustomerForOrder(account, order)
+        .then(() => {
+          expect(stripeChargeStub.calledWith(account.stripeCustId,
+            billingActuator.calculatePriceForOrder(order))).to.be.true;
+          done();
+        })
+        .catch(done);
     });
   });
 });
