@@ -35,7 +35,13 @@ export class PpAccount {
     newAccount.firstName = signupInfo.firstName;
     newAccount.lastName = signupInfo.lastName;
     newAccount.email = signupInfo.email;
-    newAccount.address = signupInfo.address;
+    newAccount.address = {
+      street1: signupInfo.street1,
+      street2: signupInfo.street2 || null,
+      city: signupInfo.city,
+      state: signupInfo.state,
+      zip: signupInfo.zip,
+    };
     newAccount.stripeCustId = signupInfo.stripeCustId;
     return newAccount;
   }

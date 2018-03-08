@@ -1,16 +1,16 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
-import { StripeClient } from './stripe.client';
+import { MockStripeClient } from './mock.stripe.client.spec';
 import { Order, PpAccount } from '../db';
 
 // Spec file for BillingActuator
 describe('Billing Actuator', () => {
   let billingActuator: BillingActuator;
-  let stripeClient: StripeClient;
+  let stripeClient: MockStripeClient;
 
   beforeEach(() => {
-    stripeClient = new StripeClient();
+    stripeClient = new MockStripeClient();
     billingActuator = new BillingActuator(stripeClient);
   });
 
