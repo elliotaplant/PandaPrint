@@ -76,6 +76,10 @@ describe('BillingActuator', () => {
 
     describe('Invalid charges', () => {
 
+      afterEach(() => {
+        expect(stripeChargeStub.notCalled).to.be.true;
+      })
+
       it('should throw an error if trying to charge customer for empty order', (done) => {
         account.stripeCustId = 'id123';
         try {
@@ -83,7 +87,17 @@ describe('BillingActuator', () => {
           done(new Error('Expected customer charge to fail for empty order'));
         } catch (error) {
           expect(error.message.toLowerCase()).to.contain('empty order');
-          expect(stripeChargeStub.notCalled).to.be.true;
+          done();
+        }
+      });
+
+      it('should throw an error if trying to charge customer without a stripe customer id', (done) => {
+        order.pictureUrls = ['1'];
+        try {
+          billingActuator.chargeCustomerForOrder(account, order)
+          done(new Error('Expected customer charge to fail for customer with no stripe customer id'));
+        } catch (error) {
+          expect(error.message.toLowerCase()).to.contain('stripe customer id');
           done();
         }
       });
