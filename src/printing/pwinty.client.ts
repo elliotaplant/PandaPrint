@@ -1,4 +1,4 @@
-import { Order } from '../type';
+import { Order } from '../db';
 
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');

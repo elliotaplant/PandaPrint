@@ -1,6 +1,6 @@
-import { DbClient } from '../client';
-import { MessageActuator } from '../actuator';
-import { PpAccount, SignupAccountRequest } from '../type';
+import { DbClient, PpAccount } from '../db';
+import { MessageActuator } from '../messages';
+import { SignupAccountRequest } from './types';
 /**
   Actuator for signups from the front end
  */

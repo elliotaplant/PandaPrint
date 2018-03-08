@@ -1,8 +1,10 @@
 import * as _ from 'lodash';
-import { DbClient, PwintyClient } from '../client';
-import {BillingActuator} from './billing.actuator';
-import {Utils} from '../utils';
-import { TwilioBody, PpAccount, PpTwilioBody } from '../type';
+import { DbClient, PpAccount } from '../db';
+import { PwintyClient } from '../printing';
+import { BillingActuator } from '../billing';
+import { Utils } from '../utils';
+import { PpTwilioBody } from './pp-twilio-body.class';
+import { TwilioBody } from './types';
 
 /**
   Actuator for recieved messages

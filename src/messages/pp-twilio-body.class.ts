@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { TwilioBody } from '../type';
+import { TwilioBody } from './types';
 import { Utils } from '../utils';
 
 /**

@@ -1,4 +1,4 @@
-import { Order, Address } from '../type'
+import { Order, Address } from './types'
 /**
   Class to represent pandaprint accounts in memory
  */

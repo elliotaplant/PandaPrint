@@ -1,24 +1,17 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
-import { MessageActuator } from './message.actuator';
-import { DbClient, PwintyClient, StripeClient } from '../client';
-import { Order, PpAccount } from '../type';
+import { StripeClient } from './stripe.client';
+import { Order, PpAccount } from '../db';
 
 // Spec file for BillingActuator
-describe('BillingActuator', () => {
-  let messageActuator: MessageActuator;
+describe('Billing Actuator', () => {
   let billingActuator: BillingActuator;
-  let dbClient: DbClient;
-  let pwintyClient: PwintyClient;
   let stripeClient: StripeClient;
 
   beforeEach(() => {
     stripeClient = new StripeClient();
-    dbClient = new DbClient();
-    pwintyClient = new PwintyClient('merchantId', 'apiKey');
     billingActuator = new BillingActuator(stripeClient);
-    messageActuator = new MessageActuator(dbClient, pwintyClient, billingActuator);
   });
 
   describe('Price Calculation', () => {

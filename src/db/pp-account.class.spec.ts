@@ -1,5 +1,5 @@
 import { PpAccount } from './pp-account.class';
-import { OrderStatus } from '../type';
+import { OrderStatus } from './types';
 import { expect } from 'chai';
 
 // Spec file for PpAccount

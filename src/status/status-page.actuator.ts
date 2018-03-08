@@ -1,4 +1,4 @@
-import { DbClient } from '../client';
+import { DbClient } from '../db';
 /**
   A actuator for displaying the app status
   */

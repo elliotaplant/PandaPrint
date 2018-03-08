@@ -1,5 +1,5 @@
-import { Order, PpAccount } from '../type';
-import { StripeClient } from '../client';
+import { Order, PpAccount } from '../db';
+import { StripeClient } from './stripe.client';
 /**
   Actuator for billing
  */
