@@ -9,7 +9,7 @@ describe('PpAccount', () => {
     let account: PpAccount;
 
     beforeEach(() => {
-      account = new PpAccount()
+      account = new PpAccount();
     });
 
     it('should create an account with an empty current order and no previous orders', () => {
