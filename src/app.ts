@@ -31,9 +31,8 @@ app.get('/', (req, res) => {
 
 // Recieve post requests to the /sms endpoint
 app.post('/sms', (req: any, res: any) => {
-  // Handle message with message actuator
   res.set('Content-Type', 'text/plain');
-  console.log('req.body 2', req.body);
+  // Handle message with message actuator
   messageActuator.handleMessage(req.phone, req.body)
     .then(replyMessage => res.send(replyMessage))
     // TODO: add error actuator to app
