@@ -61,8 +61,15 @@ describe('Message Actuator', () => {
         messageActuator.handleMessage(imagesOnlyMessage)
           .then(inviteResponse => {
             expect(inviteResponse).to.contain(`We'll save them`);
-            done();
           })
+          .then(() => dbClient.loadAccountByPhone(imagesOnlyMessage.From))
+          .then(loadedAccount => {
+            expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
+            expect(loadedAccount.currentOrder.pictureUrls)
+              .to.contain(imagesOnlyMessage.MediaUrl0)
+              .and.to.contain(imagesOnlyMessage.MediaUrl1)
+          })
+          .then(() => done())
           .catch(done);
       });
     });
