@@ -47,11 +47,20 @@ describe('Message Actuator', () => {
     });
 
     describe('Unknown Account', () => {
-
       it('should invite user to try for text only message', (done) => {
         messageActuator.handleMessage(textOnlyMessage)
           .then(inviteResponse => {
             expect(inviteResponse).to.equal(messageActuator.welcomeNoPictures)
+            done();
+          })
+          .catch(done);
+      });
+
+      it('should invite user and notify save for image only message', (done) => {
+        const imagesOnlyMessage = MockTwilioClient.multiImageNoTextExampleBody();
+        messageActuator.handleMessage(imagesOnlyMessage)
+          .then(inviteResponse => {
+            expect(inviteResponse).to.contain(`We'll save them`);
             done();
           })
           .catch(done);

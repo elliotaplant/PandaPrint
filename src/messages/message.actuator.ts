@@ -13,8 +13,6 @@ import { TwilioBody } from './types';
 export class MessageActuator {
   public readonly errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
 
-  public readonly welcomeWithPicturesMessage = `Thanks for sending your pictures to Panda Print! We'll save them until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
-
   public readonly welcomeNoPictures = `You've reached Panda Print! If you send us pictures, we'll print them out and send them to you. Give it a try now!`;
 
 
@@ -71,7 +69,7 @@ export class MessageActuator {
       // If has pictures message
       .then(() => {
         if (twilioBody.hasPictures) {
-          return this.welcomeWithPicturesMessage;
+          return this.welcomeWithPicturesMessage(twilioBody);
         } else {
           return this.welcomeNoPictures;
         }
@@ -127,7 +125,12 @@ export class MessageActuator {
     return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.street1}.`
   }
 
-  public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody) {
+  public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody): string {
     return `We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`
+  }
+
+  public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
+    const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
+    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
   }
 }

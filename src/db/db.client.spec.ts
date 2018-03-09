@@ -14,7 +14,7 @@ describe('Db Client', () => {
     dbClient = new DbClient();
   });
 
-  describe('Account creation', () => {
+  xdescribe('Account creation', () => {
     it('should create accounts with only phone number', (done) => {
       const mikeJonesPhone = '+12813308004';
       dbClient.createAccountFromPhone(mikeJonesPhone)
@@ -51,7 +51,7 @@ describe('Db Client', () => {
     });
   });
 
-  describe('Account updating', () => {
+  xdescribe('Account updating', () => {
     it('should update an account with shipping and billing info', (done) => {
       const mikeJonesPhone = '+12813308004';
       const mikeJonesInfo = PpAccount.fromSignupFormRequest({

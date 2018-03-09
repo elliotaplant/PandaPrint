@@ -31,4 +31,14 @@ export interface TwilioBody {
   MediaUrl7?: string;
   MediaUrl8?: string;
   MediaUrl9?: string;
+  MediaContentType0?: string;
+  MediaContentType1?: string;
+  MediaContentType2?: string;
+  MediaContentType3?: string;
+  MediaContentType4?: string;
+  MediaContentType5?: string;
+  MediaContentType6?: string;
+  MediaContentType7?: string;
+  MediaContentType8?: string;
+  MediaContentType9?: string;
 }

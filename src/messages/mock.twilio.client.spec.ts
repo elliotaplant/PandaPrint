@@ -42,4 +42,32 @@ export class MockTwilioClient extends TwilioClient {
       "ApiVersion": "2010-04-01"
     };
   }
+
+  static multiImageNoTextExampleBody(): TwilioBody {
+    return {
+      "MediaContentType1": "image/jpeg",
+      "ToCountry": "US",
+      "MediaContentType0": "image/jpeg",
+      "ToState": "CA",
+      "SmsMessageSid": "MM2424e22d97296f114fd765385bad284d",
+      "NumMedia": "2",
+      "ToCity": "SAN RAFAEL",
+      "FromZip": "94560",
+      "SmsSid": "MM2424e22d97296f114fd765385bad284d",
+      "FromState": "CA",
+      "SmsStatus": "received",
+      "FromCity": "OAKLAND",
+      "Body": "",
+      "FromCountry": "US",
+      "To": "+14155793449",
+      "MediaUrl1": "https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM2424e22d97296f114fd765385bad284d/Media/ME687ccbf53346bee61027ede507821b1d",
+      "ToZip": "94901",
+      "NumSegments": "2",
+      "MessageSid": "MM2424e22d97296f114fd765385bad284d",
+      "AccountSid": "ACdb81644e6634d5a58f31e01809638331",
+      "From": "+15109175552",
+      "MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MM2424e22d97296f114fd765385bad284d/Media/ME3e732606cfc242d04fc4ef7222bf85b5",
+      "ApiVersion": "2010-04-01"
+    };
+  }
 }

@@ -3,7 +3,7 @@ import { DbClient } from './db.client';
 import { PpAccount } from './pp-account.class';
 
 /**
-  A mock to represent the DbClient
+  A mock to in memory db to represent the DbClient
   */
 
 export class MockDbClient extends DbClient {
