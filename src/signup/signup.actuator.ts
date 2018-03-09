@@ -35,7 +35,28 @@ export class SignupActuator {
         zip: signupAccountReq.zip,
       },
       stripeCustId: signupAccountReq.stripeToken, // this has gotta change
-      phone: signupAccountReq.phone,
+      phone: signupAccountReq.phone, // this needs sanitization
     }
+  }
+
+  private sanitizePhone(phone: string): string {
+    const justDigits = phone.replace(/\D/g,'');
+    if (phone.length > 10) {
+      throw new Error('Recieved phone with less than 10 digits');
+    }
+    // Assume everyone is American
+    else if (phone.length === 10) {
+      return '+1' + phone;
+    }
+
+    else if (phone.length === 11 && phone.startsWith('1')) {
+      return '+' + phone;
+    }
+
+    else if (phone.startsWith('+1')) {
+      return phone;
+    }
+
+    throw new Error('Improperly formatted phone signup')
   }
 }
