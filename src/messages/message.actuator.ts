@@ -23,17 +23,17 @@ export class MessageActuator {
   constructor(private dbClient: DbClient, private pwintyClient: PwintyClient, private billingActuator: BillingActuator) { }
 
   // Handle an incoming message and return the response to send to the user
-  public handleMessage(phone: string, twilioBody: TwilioBody): Promise<string> {
+  public handleMessage(twilioBody: TwilioBody): Promise<string> {
+    // convert twilioBody into something usable
+    const ppTwilioBody = new PpTwilioBody(twilioBody);
 
     // Pull up user account from database
-    return this.dbClient.loadAccountByPhone(phone)
+    return this.dbClient.loadAccountByPhone(ppTwilioBody.phone)
       .then(account => {
-        // convert twilioBody into something usable
-        const ppTwilioBody = new PpTwilioBody(twilioBody);
         if (account) {
           return this.handleMsgForExistingAccount(ppTwilioBody, account);
         } else {
-          return this.handleMsgForNonExistantAccount(ppTwilioBody, phone)
+          return this.handleMsgForNonExistantAccount(ppTwilioBody, ppTwilioBody.phone)
         }
       })
       // If there was an uncaught error, send the user an apology

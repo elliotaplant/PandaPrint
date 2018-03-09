@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
 // Recieve post requests to the /sms endpoint
 app.post('/sms', (req: any, res: any) => {
   res.set('Content-Type', 'text/plain');
+  console.log('req.body', req.body, JSON.stringify(req.body));
   // Handle message with message actuator
   messageActuator.handleMessage(req.phone, req.body)
     .then(replyMessage => res.send(replyMessage))

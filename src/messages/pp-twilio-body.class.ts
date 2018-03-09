@@ -8,10 +8,12 @@ import { Utils } from '../utils';
 export class PpTwilioBody {
   text: string;
   mediaUrls: string[];
+  phone: string;
 
   constructor(twilioBody: TwilioBody) {
     this.text = twilioBody.Body;
     this.mediaUrls = this.getMediaUrlsFromTwilioBody(twilioBody);
+    this.phone = twilioBody.From;
   }
 
   get hasText(): boolean {
