@@ -24,11 +24,12 @@ export class MessageActuator {
 
   // Handle an incoming message and return the response to send to the user
   public handleMessage(phone: string, twilioBody: TwilioBody): Promise<string> {
-    const ppTwilioBody = new PpTwilioBody(twilioBody);
 
     // Pull up user account from database
     return this.dbClient.loadAccountByPhone(phone)
       .then(account => {
+        // convert twilioBody into something usable
+        const ppTwilioBody = new PpTwilioBody(twilioBody);
         if (account) {
           return this.handleMsgForExistingAccount(ppTwilioBody, account);
         } else {

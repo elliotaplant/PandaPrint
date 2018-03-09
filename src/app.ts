@@ -1,4 +1,6 @@
 import * as express from 'express';
+import * as bodyParser from 'body-parser';
+
 import { PwintyClient } from './printing';
 import { BillingActuator, StripeClient } from './billing';
 import { MessageActuator, TwilioClient } from './messages';
@@ -18,6 +20,10 @@ const signupActuator = new SignupActuator(dbClient);
 
 const app = express();
 
+// Middleware
+// Tell express to use the body-parser middleware and to not parse extended bodies
+app.use(bodyParser.urlencoded({extended: false}))
+
 app.get('/', (req, res) => {
   // Send status page
   statusActuator.sendStatusPage(res);
@@ -26,6 +32,8 @@ app.get('/', (req, res) => {
 // Recieve post requests to the /sms endpoint
 app.post('/sms', (req: any, res: any) => {
   // Handle message with message actuator
+  res.set('Content-Type', 'text/plain');
+  console.log('req.body 2', req.body);
   messageActuator.handleMessage(req.phone, req.body)
     .then(replyMessage => res.send(replyMessage))
     // TODO: add error actuator to app
