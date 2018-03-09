@@ -1,6 +1,5 @@
-import { Address, Order } from './types';
+import { Address, Order, EntryPpAccount, PpAccount } from './types';
 import { DbClient } from './db.client';
-import { EntryPpAccount, PpAccount } from './pp-account.class';
 
 /**
   A mock to in memory db to represent the DbClient

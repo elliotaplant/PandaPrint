@@ -1,5 +1,4 @@
-import { Address, Order, OrderStatus } from './types';
-import { EntryPpAccount, PpAccount } from './pp-account.class';
+import { Address, Order, OrderStatus, EntryPpAccount, PpAccount } from './types';
 import * as mongoose from 'mongoose';
 import { SchemaType, Document, Schema, Model } from 'mongoose';
 
@@ -32,7 +31,7 @@ export class DbClient {
       email: String,
       address: AddressSchema,
       phone: String,
-      currentOrder: {type: OrderSchema, default: OrderSchema }, // somehow make this mandatory new Order on creation
+      currentOrder: { type: OrderSchema, default: OrderSchema }, // somehow make this mandatory new Order on creation
       previousOrders: [OrderSchema], // somehow make this mandatory [] on creation
       stripeCustId: String,
     });

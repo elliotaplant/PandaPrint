@@ -1,3 +1,4 @@
+import { Document } from 'mongoose'
 // A reflection of DB types
 
 // User account info
@@ -35,3 +36,19 @@ export enum OrderStatus {
   Sending,
   Closed
 }
+
+/**
+  Class to represent pandaprint accounts in memory
+ */
+export interface EntryPpAccount {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  address?: Address;
+  phone: string;
+  currentOrder?: Order;
+  previousOrders?: Order[];
+  stripeCustId?: string;
+}
+
+export interface PpAccount extends Document, EntryPpAccount { }

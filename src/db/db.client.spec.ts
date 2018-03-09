@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { Address, Order } from './types';
-import { EntryPpAccount, PpAccount } from './pp-account.class';
+import { Address, Order, EntryPpAccount, PpAccount } from './types';
 import { DbClient } from './db.client';
 
 /**
