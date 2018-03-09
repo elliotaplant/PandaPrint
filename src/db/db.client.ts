@@ -20,7 +20,7 @@ export class DbClient {
     });
 
     const OrderSchema = new Schema({
-      pictureUrls: [String],
+      pictureUrls: [String], // somehow make this mandatory on creation
       status: Number,
       sendDate: Date,
       arriveDate: Date,
@@ -32,8 +32,8 @@ export class DbClient {
       email: String,
       address: AddressSchema,
       phone: String,
-      currentOrder: OrderSchema,
-      previousOrders: [OrderSchema],
+      currentOrder: OrderSchema, // somehow make this mandatory new Order on creation
+      previousOrders: [OrderSchema], // somehow make this mandatory [] on creation
       stripeCustId: String,
     });
 
@@ -83,21 +83,19 @@ export class DbClient {
   }
 
   public createAccountFromPhone(phone: string): Promise<PpAccount> {
-    return new Promise(resolve => {
-      resolve(null);
-    });
+    return this.Account.create({ phone });
   }
 
   public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
-    return new Promise(resolve => {
-      resolve(null);
-    });
+    return this.Account.findOne({ phone: updatedAccount.phone })
+      .then(foundAccount => ({ ...foundAccount, ...updatedAccount }.save()))
   }
 
   public addPhotosToUsersCurrentOrder(photos: string[], phone: string) {
     return this.loadAccountByPhone(phone)
       .then(account => {
-        return null;
+        account.currentOrder.pictureUrls.push(...photos);
+        return account.save();
       });
   }
 

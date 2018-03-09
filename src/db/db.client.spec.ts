@@ -29,8 +29,8 @@ describe('Db Client', () => {
       .catch(done);
   });
 
-  describe('Account creation', () => {
-    xit('should create accounts with only phone number', (done) => {
+  describe.only('Account creation', () => {
+    it('should create accounts with only phone number', (done) => {
       const mikeJonesPhone = '+12813308004';
       dbClient.createAccountFromPhone(mikeJonesPhone)
         .then(createdAccount => {
@@ -41,7 +41,7 @@ describe('Db Client', () => {
         .catch(done);
     });
 
-    it.only('should create accounts with a full profile', (done) => {
+    it('should create accounts with a full profile', (done) => {
       const soljaStreet = '1234 Solja St.';
       const soljaBoi: EntryPpAccount = {
         phone: '+16789998212',
