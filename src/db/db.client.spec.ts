@@ -29,7 +29,7 @@ describe('Db Client', () => {
       .catch(done);
   });
 
-  describe.only('Account creation', () => {
+  describe('Account creation', () => {
     it('should create accounts with only phone number', (done) => {
       const mikeJonesPhone = '+12813308004';
       dbClient.createAccountFromPhone(mikeJonesPhone)
@@ -70,7 +70,7 @@ describe('Db Client', () => {
     });
   });
 
-  xdescribe('Account updating', () => {
+  describe('Account updating', () => {
     it('should update an account with shipping and billing info', (done) => {
       const mikeJonesPhone = '+12813308004';
       const mikeJonesInfo: EntryPpAccount = {
@@ -86,8 +86,6 @@ describe('Db Client', () => {
         firstName: 'Mike',
         lastName: 'Jones',
         stripeCustId: 'FLOSSIN',
-        currentOrder: new Order(),
-        previousOrders: []
       };
 
       dbClient.createAccountFromPhone(mikeJonesPhone)

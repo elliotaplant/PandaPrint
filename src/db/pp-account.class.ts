@@ -9,8 +9,8 @@ export interface EntryPpAccount {
   email?: string;
   address?: Address;
   phone: string;
-  currentOrder: Order;
-  previousOrders: Order[];
+  currentOrder?: Order;
+  previousOrders?: Order[];
   stripeCustId?: string;
 }
 

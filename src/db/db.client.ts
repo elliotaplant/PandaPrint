@@ -88,7 +88,10 @@ export class DbClient {
 
   public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
     return this.Account.findOne({ phone: updatedAccount.phone })
-      .then(foundAccount => ({ ...foundAccount, ...updatedAccount }.save()))
+      .then(found => {
+        found.set(updatedAccount);
+        return found.save();
+      });
   }
 
   public addPhotosToUsersCurrentOrder(photos: string[], phone: string) {
