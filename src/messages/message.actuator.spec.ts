@@ -5,6 +5,7 @@ import { MockBillingActuator } from '../billing/index.spec';
 import { MessageActuator } from './message.actuator';
 import { TwilioBody } from './types';
 import { DbClient, Order, PpAccount } from '../db';
+import { MockDbClient } from '../db/index.spec';
 import { PwintyClient } from '../printing';
 import { MockTwilioClient } from './mock.twilio.client.spec';
 
@@ -18,7 +19,7 @@ describe('Message Actuator', () => {
   let pwintyClient: PwintyClient;
 
   beforeEach(() => {
-    dbClient = new DbClient();
+    dbClient = new MockDbClient();
     pwintyClient = new PwintyClient('merchantId', 'apiKey');
     mockBillingActuator = new MockBillingActuator();
     messageActuator = new MessageActuator(dbClient, pwintyClient, mockBillingActuator);

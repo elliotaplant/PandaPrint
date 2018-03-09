@@ -1,11 +1,12 @@
 import { Address, Order } from './types';
+import { DbClient } from './db.client';
 import { PpAccount } from './pp-account.class';
 
 /**
   A mock to represent the DbClient
   */
 
-export class MockDbClient {
+export class MockDbClient extends DbClient {
   // Private in-memory DB
   private accounts: Map<string, PpAccount> = new Map();
 

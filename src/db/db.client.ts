@@ -6,46 +6,35 @@ import { PpAccount } from './pp-account.class';
   */
 
 export class DbClient {
-  private accounts: Map<string, PpAccount> = new Map();
 
   public loadAccountByPhone(phone: string): Promise<PpAccount> {
     return new Promise(resolve => {
-      const foundAccount = this.accounts.get(phone);
-      resolve(foundAccount);
+      resolve(null);
     });
   }
 
   public createAccount(newAccount: PpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
-      this.accounts.set(newAccount.phone, newAccount);
-      const foundAccount = this.accounts.get(newAccount.phone);
-      resolve(foundAccount);
+      resolve(null);
     });
   }
 
   public createAccountFromPhone(phone: string): Promise<PpAccount> {
     return new Promise(resolve => {
-      const newAccount = PpAccount.fromPhone(phone);
-      this.accounts.set(newAccount.phone, newAccount);
-      const foundAccount = this.accounts.get(newAccount.phone);
-      resolve(foundAccount);
+      resolve(null);
     });
   }
 
   public updateAccount(updatedAccount: PpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
-      this.accounts.set(updatedAccount.phone, updatedAccount);
-      const foundAccount = this.accounts.get(updatedAccount.phone);
-      resolve(foundAccount);
+      resolve(null);
     });
   }
 
   public addPhotosToUsersCurrentOrder(photos: string[], phone: string) {
     return this.loadAccountByPhone(phone)
       .then(account => {
-        const currentOrder = account.currentOrder;
-        currentOrder.pictureUrls = currentOrder.pictureUrls.concat(photos);
-        return account;
+        return null;
       });
   }
 }

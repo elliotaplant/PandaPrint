@@ -3,8 +3,12 @@
   "compilerOptions": {
     "outDir": "dist-spec",
     "baseUrl": "",
+    "target": "es6",
+    "lib": [
+      "es2016"
+    ],
     "types": [
-      "jasmine",
+      "chai",
       "node"
     ]
   },

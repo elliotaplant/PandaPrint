@@ -34,7 +34,7 @@ app.post('/sms', (req: any, res: any) => {
   res.set('Content-Type', 'text/plain');
   console.log('req.body', req.body, JSON.stringify(req.body));
   // Handle message with message actuator
-  messageActuator.handleMessage(req.phone, req.body)
+  messageActuator.handleMessage(req.body)
     .then(replyMessage => res.send(replyMessage))
     // TODO: add error actuator to app
     .catch(e => res.send('Hmm, something went wrong. We\'ll get back to you soon to fix it'));
