@@ -1,10 +1,10 @@
 {
   "name": "pandaprint",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Print photos with text messages",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test": "mocha -r ts-node/register src/server/**/*.spec.ts",
     "build": "tsc",
     "start": "tsc && node dist/app.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js"

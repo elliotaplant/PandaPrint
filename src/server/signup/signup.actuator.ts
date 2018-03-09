@@ -1,20 +1,23 @@
 import { DbClient, EntryPpAccount, PpAccount } from '../db';
 import { MessageActuator } from '../messages';
-import { SignupAccountRequest } from './types';
+import { StripeClient } from '../billing';
+import { SignupWithStripeId, SignupAccountRequest } from './types';
 /**
   Actuator for signups from the front end
  */
 
 export class SignupActuator {
-  constructor(private dbClient: DbClient) { }
+  constructor(private dbClient: DbClient, private stripeClient: StripeClient) { }
 
   // This can be better
   public handleSignup(signupAccountReq: SignupAccountRequest): Promise<string> {
-    // stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken)
-    //  .then(customer => PpAccount.fromSignupFormRequest(signupAccountReq, customer.id))
-    //  .then(newPpAccount => dbClient.createAccount(newPpAccount))
-    return this.dbClient.createAccount(this.signupAccountRequestToEntryPpAccount(signupAccountReq))
-      .then(createdAccount => this.signupWelcomeMessage(createdAccount));
+    return this.stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken)
+     .then(customer => ({ ...signupAccountReq, stripeCustId: customer.id }))
+     .then(signupReqWithStripe => this.accountReqSanitizePhone(signupReqWithStripe))
+     .then(signupReq => this.signupRequestToEntryPpAccount(signupReq))
+     .then(entryPpAcctReq => this.dbClient.createAccount(entryPpAcctReq))
+     .then(createdAccount => this.signupWelcomeMessage(createdAccount));
+     // .catch?
   }
 
   // private methods
@@ -22,7 +25,7 @@ export class SignupActuator {
     return `Welcome to Panda Print ${account.firstName}! Try sending us a picture to print.`
   }
 
-  private signupAccountRequestToEntryPpAccount(signupAccountReq: SignupAccountRequest): EntryPpAccount {
+  private signupRequestToEntryPpAccount(signupAccountReq: SignupAccountRequest): EntryPpAccount {
     return {
       firstName: signupAccountReq.firstName,
       lastName: signupAccountReq.lastName,
@@ -37,6 +40,10 @@ export class SignupActuator {
       stripeCustId: signupAccountReq.stripeToken, // this has gotta change
       phone: signupAccountReq.phone, // this needs sanitization
     }
+  }
+
+  private accountReqSanitizePhone(signupWithStripeId: SignupWithStripeId): SignupWithStripeId {
+    return { ...signupWithStripeId, phone: this.sanitizePhone(signupWithStripeId.phone) };
   }
 
   private sanitizePhone(phone: string): string {

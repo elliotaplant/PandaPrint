@@ -12,12 +12,12 @@
     "baseUrl": ".",
     "paths": {
       "*": [
-        "src/types/*"
+        "src/server/types/*"
       ]
     }
   },
   "include": [
-    "src/**/*"
+    "src/server/**/*"
   ],
   "exclude": [
     "node_modules",

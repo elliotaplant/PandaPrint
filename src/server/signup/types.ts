@@ -11,3 +11,7 @@ export interface SignupAccountRequest {
   stripeToken: string;
   phone: string;
 }
+
+export interface SignupWithStripeId extends SignupAccountRequest {
+  stripeCustId: string;
+}
