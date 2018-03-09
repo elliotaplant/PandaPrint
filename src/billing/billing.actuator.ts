@@ -1,4 +1,4 @@
-import { Order, PpAccount } from '../db';
+import { Order, EntryPpAccount } from '../db';
 import { StripeClient } from './stripe.client';
 /**
   Actuator for billing
@@ -17,7 +17,7 @@ export class BillingActuator {
     return this.shippingPrice + order.pictureUrls.length * this.pricePerPhoto;
   }
 
-  public chargeCustomerForOrder(account: PpAccount, order: Order) {
+  public chargeCustomerForOrder(account: EntryPpAccount, order: Order) {
     if (!account.stripeCustId) {
       throw new Error('Attempting to charge a customer without a Stripe Customer ID.');
     }

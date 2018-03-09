@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
 import { MockStripeClient } from './mock.stripe.client.spec';
-import { Order, PpAccount } from '../db';
+import { Order, EntryPpAccount } from '../db';
 
 // Spec file for BillingActuator
 describe('Billing Actuator', () => {
@@ -33,11 +33,11 @@ describe('Billing Actuator', () => {
 
   describe('Customer charging', () => {
     let stripeChargeStub: sinon.SinonStub;
-    let account: PpAccount;
+    let account: EntryPpAccount;
     let order: Order;
 
     beforeEach(() => {
-      account = new PpAccount();
+      account = { phone: '+12345678910' };
       order = new Order();
       stripeChargeStub = sinon.stub(stripeClient, 'chargeCustomer').returns(Promise.resolve(true));
     });

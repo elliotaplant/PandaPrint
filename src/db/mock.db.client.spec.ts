@@ -1,6 +1,6 @@
 import { Address, Order } from './types';
 import { DbClient } from './db.client';
-import { PpAccount } from './pp-account.class';
+import { EntryPpAccount, PpAccount } from './pp-account.class';
 
 /**
   A mock to in memory db to represent the DbClient
@@ -18,9 +18,9 @@ export class MockDbClient extends DbClient {
     });
   }
 
-  public createAccount(newAccount: PpAccount): Promise<PpAccount> {
+  public createAccount(newAccount: EntryPpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
-      this.accounts.set(newAccount.phone, newAccount);
+      this.accounts.set(newAccount.phone, <any>newAccount);
       const foundAccount = this.accounts.get(newAccount.phone);
       resolve(foundAccount);
     });
@@ -28,16 +28,20 @@ export class MockDbClient extends DbClient {
 
   public createAccountFromPhone(phone: string): Promise<PpAccount> {
     return new Promise(resolve => {
-      const newAccount = PpAccount.fromPhone(phone);
+      const newAccount: any = {
+        phone,
+        currentOrder: { photoUrls: [] },
+        previousOrders: []
+      };
       this.accounts.set(newAccount.phone, newAccount);
       const foundAccount = this.accounts.get(newAccount.phone);
       resolve(foundAccount);
     });
   }
 
-  public updateAccount(updatedAccount: PpAccount): Promise<PpAccount> {
+  public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
-      this.accounts.set(updatedAccount.phone, updatedAccount);
+      this.accounts.set(updatedAccount.phone, <any>updatedAccount);
       const foundAccount = this.accounts.get(updatedAccount.phone);
       resolve(foundAccount);
     });
@@ -50,10 +54,5 @@ export class MockDbClient extends DbClient {
         currentOrder.pictureUrls = currentOrder.pictureUrls.concat(photos);
         return account;
       });
-  }
-
-  // Mock helper Methods
-  public addFullAccount(account?: PpAccount) {
-  // TODO: implement
   }
 }
