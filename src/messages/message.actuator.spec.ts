@@ -68,6 +68,24 @@ describe('Message Actuator', () => {
             expect(loadedAccount.currentOrder.pictureUrls)
               .to.contain(imagesOnlyMessage.MediaUrl0)
               .and.contain(imagesOnlyMessage.MediaUrl1)
+              .and.to.have.length(2);
+          })
+          .then(() => done())
+          .catch(done);
+      });
+
+      it('should invite user and notify save for image and text message', (done) => {
+        const imagesOnlyMessage = MockTwilioClient.singleImagewithTextExampleBody();
+        messageActuator.handleMessage(imagesOnlyMessage)
+          .then(inviteResponse => {
+            expect(inviteResponse).to.contain(`We'll save it`);
+          })
+          .then(() => dbClient.loadAccountByPhone(imagesOnlyMessage.From))
+          .then(loadedAccount => {
+            expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
+            expect(loadedAccount.currentOrder.pictureUrls)
+              .to.contain(imagesOnlyMessage.MediaUrl0)
+              .and.to.have.length(1);
           })
           .then(() => done())
           .catch(done);

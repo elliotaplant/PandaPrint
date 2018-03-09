@@ -70,4 +70,30 @@ export class MockTwilioClient extends TwilioClient {
       "ApiVersion": "2010-04-01"
     };
   }
+
+  static singleImagewithTextExampleBody(): TwilioBody {
+    return {
+      "ToCountry": "US",
+      "MediaContentType0": "image/jpeg",
+      "ToState": "CA",
+      "SmsMessageSid": "MMddf764cf3645271927a4ebe20e593fa9",
+      "NumMedia": "1",
+      "ToCity": "SAN RAFAEL",
+      "FromZip": "94560",
+      "SmsSid": "MMddf764cf3645271927a4ebe20e593fa9",
+      "FromState": "CA",
+      "SmsStatus": "received",
+      "FromCity": "OAKLAND",
+      "Body": "Image and text!",
+      "FromCountry": "US",
+      "To": "+14155793449",
+      "ToZip": "94901",
+      "NumSegments": "1",
+      "MessageSid": "MMddf764cf3645271927a4ebe20e593fa9",
+      "AccountSid": "ACdb81644e6634d5a58f31e01809638331",
+      "From": "+15109175552",
+      "MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/ACdb81644e6634d5a58f31e01809638331/Messages/MMddf764cf3645271927a4ebe20e593fa9/Media/ME3729df3fee9331533785030593ef46c6",
+      "ApiVersion": "2010-04-01"
+    };
+  }
 }
