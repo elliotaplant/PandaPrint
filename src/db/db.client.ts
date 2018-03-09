@@ -1,4 +1,4 @@
-import { Address, Order } from './types';
+import { Address, Order, OrderStatus } from './types';
 import { EntryPpAccount, PpAccount } from './pp-account.class';
 import * as mongoose from 'mongoose';
 import { SchemaType, Document, Schema, Model } from 'mongoose';
@@ -20,8 +20,8 @@ export class DbClient {
     });
 
     const OrderSchema = new Schema({
-      pictureUrls: [String], // somehow make this mandatory on creation
-      status: Number,
+      pictureUrls: { type: [String], default: [] }, // somehow make this mandatory on creation
+      status: { type: Number, default: OrderStatus.Open },
       sendDate: Date,
       arriveDate: Date,
     });
@@ -32,7 +32,7 @@ export class DbClient {
       email: String,
       address: AddressSchema,
       phone: String,
-      currentOrder: OrderSchema, // somehow make this mandatory new Order on creation
+      currentOrder: {type: OrderSchema, default: OrderSchema }, // somehow make this mandatory new Order on creation
       previousOrders: [OrderSchema], // somehow make this mandatory [] on creation
       stripeCustId: String,
     });
