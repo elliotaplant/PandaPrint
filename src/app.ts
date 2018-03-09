@@ -22,7 +22,7 @@ const app = express();
 
 // Middleware
 // Tell express to use the body-parser middleware and to not parse extended bodies
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
   // Send status page
