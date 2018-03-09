@@ -67,7 +67,7 @@ describe('Message Actuator', () => {
             expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
             expect(loadedAccount.currentOrder.pictureUrls)
               .to.contain(imagesOnlyMessage.MediaUrl0)
-              .and.to.contain(imagesOnlyMessage.MediaUrl1)
+              .and.contain(imagesOnlyMessage.MediaUrl1)
           })
           .then(() => done())
           .catch(done);
