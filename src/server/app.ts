@@ -16,7 +16,7 @@ const stripeClient = new StripeClient();
 const statusActuator = new StatusActuator(dbClient);
 const billingActuator = new BillingActuator(stripeClient);
 const messageActuator = new MessageActuator(dbClient, pwintyClient, billingActuator);
-const signupActuator = new SignupActuator(dbClient);
+const signupActuator = new SignupActuator(dbClient, stripeClient);
 
 const app = express();
 
