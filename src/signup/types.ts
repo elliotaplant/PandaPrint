@@ -9,4 +9,5 @@ export interface SignupAccountRequest {
   state: string;
   zip: string;
   stripeToken: string;
+  phone: string;
 }
