@@ -24,6 +24,10 @@ export class Order {
   get isEmptyOrder(): boolean {
     return this.pictureUrls.length === 0;
   }
+
+  static emptyOrder(): Order {
+    return new Order();
+  }
 }
 
 export enum OrderStatus {

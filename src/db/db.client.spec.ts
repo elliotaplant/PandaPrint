@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Address, Order } from './types';
-import { PpAccount } from './pp-account.class';
+import { EntryPpAccount, PpAccount } from './pp-account.class';
 import { DbClient } from './db.client';
 
 /**
@@ -10,12 +10,27 @@ import { DbClient } from './db.client';
 describe('Db Client', () => {
   let dbClient: DbClient;
 
-  beforeEach(() => {
+  before((done) => {
     dbClient = new DbClient();
+    dbClient.init()
+      .then(() => done())
+      .catch(done);
   });
 
-  xdescribe('Account creation', () => {
-    it('should create accounts with only phone number', (done) => {
+  afterEach((done) => {
+    dbClient.clearAll()
+      .then(() => done())
+      .catch(done);
+  });
+
+  after((done) => {
+    dbClient.close()
+      .then(() => done())
+      .catch(done);
+  });
+
+  describe('Account creation', () => {
+    xit('should create accounts with only phone number', (done) => {
       const mikeJonesPhone = '+12813308004';
       dbClient.createAccountFromPhone(mikeJonesPhone)
         .then(createdAccount => {
@@ -26,19 +41,23 @@ describe('Db Client', () => {
         .catch(done);
     });
 
-    it('should create accounts with a full profile', (done) => {
+    it.only('should create accounts with a full profile', (done) => {
       const soljaStreet = '1234 Solja St.';
-      const soljaBoi = PpAccount.fromSignupFormRequest({
+      const soljaBoi: EntryPpAccount = {
         phone: '+16789998212',
         email: 'solja@boi.org',
-        street1: soljaStreet,
-        street2: 'Unit 4',
-        city: 'East Atlana',
-        state: 'GA',
-        zip: '90210',
+        address: {
+          street1: soljaStreet,
+          street2: 'Unit 4',
+          city: 'East Atlana',
+          state: 'GA',
+          zip: '90210',
+        },
         firstName: 'Solja',
         lastName: 'Boi',
-      });
+        currentOrder: Order.emptyOrder(),
+        previousOrders: []
+      };
 
       dbClient.createAccount(soljaBoi)
         .then(createdAccount => {
@@ -54,18 +73,22 @@ describe('Db Client', () => {
   xdescribe('Account updating', () => {
     it('should update an account with shipping and billing info', (done) => {
       const mikeJonesPhone = '+12813308004';
-      const mikeJonesInfo = PpAccount.fromSignupFormRequest({
+      const mikeJonesInfo: EntryPpAccount = {
         phone: '+12813308004',
         email: 'mike@jones.org',
-        street1: 'who?',
-        street2: 'mike jones',
-        city: 'East Atlana',
-        state: 'GA',
-        zip: '90210',
+        address: {
+          street1: 'who?',
+          street2: 'mike jones',
+          city: 'East Atlana',
+          state: 'GA',
+          zip: '90210',
+        },
         firstName: 'Mike',
         lastName: 'Jones',
-        stripeCustId: 'FLOSSIN'
-      });
+        stripeCustId: 'FLOSSIN',
+        currentOrder: new Order(),
+        previousOrders: []
+      };
 
       dbClient.createAccountFromPhone(mikeJonesPhone)
         .then(createdAccount => {

@@ -1,5 +1,5 @@
 import { Address, Order } from './types';
-import { PpAccount } from './pp-account.class';
+import { EntryPpAccount, PpAccount } from './pp-account.class';
 import * as mongoose from 'mongoose';
 import { SchemaType, Document, Schema, Model } from 'mongoose';
 
@@ -8,7 +8,7 @@ import { SchemaType, Document, Schema, Model } from 'mongoose';
   */
 
 export class DbClient {
-  private Account: Model<Document>;
+  private Account: Model<PpAccount>;
 
   constructor() {
     const AddressSchema = new Schema({
@@ -46,7 +46,7 @@ export class DbClient {
 
       mongoose.connect(mongoUri, error => {
         if (error) {
-          console.error('Failed to start Mongo ');
+          console.error('Failed to start Mongo');
           console.error(error);
           reject(error);
         } else {
@@ -57,16 +57,29 @@ export class DbClient {
     });
   }
 
-  public loadAccountByPhone(phone: string): Promise<PpAccount> {
-    return new Promise(resolve => {
-      resolve(null);
+  public close(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/pandaprint';
+
+      mongoose.disconnect(error => {
+        if (error) {
+          console.error('Failed to disconnect from Mongo');
+          console.error(error);
+          reject(error);
+        } else {
+          console.log(`Mongo disconnected`);
+          resolve();
+        }
+      });
     });
   }
 
-  public createAccount(newAccount: PpAccount): Promise<PpAccount> {
-    return new Promise(resolve => {
-      resolve(null);
-    });
+  public loadAccountByPhone(phone: string): Promise<PpAccount> {
+    return this.Account.findOne({ phone }).then();
+  }
+
+  public createAccount(newAccount: EntryPpAccount): Promise<PpAccount> {
+    return this.Account.create(newAccount);
   }
 
   public createAccountFromPhone(phone: string): Promise<PpAccount> {
@@ -75,7 +88,7 @@ export class DbClient {
     });
   }
 
-  public updateAccount(updatedAccount: PpAccount): Promise<PpAccount> {
+  public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
     return new Promise(resolve => {
       resolve(null);
     });
@@ -86,5 +99,10 @@ export class DbClient {
       .then(account => {
         return null;
       });
+  }
+
+  public clearAll(): Promise<void> {
+    // if env is prod, throw error
+    return this.Account.remove({}).then(() => null);
   }
 }
