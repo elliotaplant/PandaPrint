@@ -77,7 +77,7 @@ export class MessageActuator {
   }
 
   private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
-    if (account.isFullAccount) {
+    if (this.isFullAccount(account)) {
       // Use pwinty client to create and send order
       this.pwintyClient.sendOrderToPwinty(account.currentOrder)
         // Use billing client to charge user
@@ -132,5 +132,14 @@ export class MessageActuator {
   public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
     const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
     return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+  }
+
+  private isFullAccount(account: PpAccount) {
+    return !!(account.phone &&
+      account.address &&
+      account.stripeCustId &&
+      account.email &&
+      account.firstName &&
+      account.lastName);
   }
 }
