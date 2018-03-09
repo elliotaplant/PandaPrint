@@ -4,7 +4,7 @@ import { BillingActuator } from '../billing';
 import { MockBillingActuator } from '../billing/index.spec';
 import { MessageActuator } from './message.actuator';
 import { TwilioBody } from './types';
-import { DbClient, Order, PpAccount } from '../db';
+import { Order, PpAccount } from '../db';
 import { MockDbClient } from '../db/index.spec';
 import { PwintyClient } from '../printing';
 import { MockTwilioClient } from './mock.twilio.client.spec';
@@ -15,14 +15,14 @@ describe('Message Actuator', () => {
 
   let messageActuator: MessageActuator;
   let mockBillingActuator: MockBillingActuator;
-  let dbClient: DbClient;
+  let mockDbClient: MockDbClient;
   let pwintyClient: PwintyClient;
 
   beforeEach(() => {
-    dbClient = new MockDbClient();
+    mockDbClient = new MockDbClient();
     pwintyClient = new PwintyClient('merchantId', 'apiKey');
     mockBillingActuator = new MockBillingActuator();
-    messageActuator = new MessageActuator(dbClient, pwintyClient, mockBillingActuator);
+    messageActuator = new MessageActuator(mockDbClient, pwintyClient, mockBillingActuator);
 
     textOnlyMessage = MockTwilioClient.justTextExampleBody();
   });
@@ -31,7 +31,7 @@ describe('Message Actuator', () => {
     describe('Partially Known Accounts', () => {
 
       beforeEach((done) => {
-        dbClient.createAccountFromPhone(textOnlyMessage.From)
+        mockDbClient.createAccountFromPhone(textOnlyMessage.From)
           .then(() => done())
           .catch(done);
       });
@@ -62,7 +62,7 @@ describe('Message Actuator', () => {
           .then(inviteResponse => {
             expect(inviteResponse).to.contain(`We'll save them`);
           })
-          .then(() => dbClient.loadAccountByPhone(imagesOnlyMessage.From))
+          .then(() => mockDbClient.loadAccountByPhone(imagesOnlyMessage.From))
           .then(loadedAccount => {
             expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
             expect(loadedAccount.currentOrder.pictureUrls)
@@ -80,7 +80,7 @@ describe('Message Actuator', () => {
           .then(inviteResponse => {
             expect(inviteResponse).to.contain(`We'll save it`);
           })
-          .then(() => dbClient.loadAccountByPhone(imagesOnlyMessage.From))
+          .then(() => mockDbClient.loadAccountByPhone(imagesOnlyMessage.From))
           .then(loadedAccount => {
             expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
             expect(loadedAccount.currentOrder.pictureUrls)
