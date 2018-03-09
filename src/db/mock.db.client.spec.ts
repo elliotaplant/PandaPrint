@@ -29,7 +29,7 @@ export class MockDbClient extends DbClient {
     return new Promise(resolve => {
       const newAccount: any = {
         phone,
-        currentOrder: { photoUrls: [] },
+        currentOrder: { pictureUrls: [] },
         previousOrders: []
       };
       this.accounts.set(newAccount.phone, newAccount);
