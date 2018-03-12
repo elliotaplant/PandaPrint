@@ -11,7 +11,7 @@ const pwintyKeys = require('../../../keys.json').pwinty;
 
 describe('Pwinty Client', function() {
   // Increase the default timeout for these tests since they are hitting the sandbox pwinty api
-  this.timeout(5000);
+  this.timeout(10000);
 
   // Example address to use
   let pinappleUnderTheSea: Address;
@@ -75,18 +75,17 @@ describe('Pwinty Client', function() {
   });
 
   describe('Submitting an order', function() {
-    // Submitting an order takes even longer
-    this.timeout(10000);
 
     it('should submit a fully valid order', (done) => {
       // Mark the payment as paid for
       photoOrder.paymentReceipt = '123 Stripe Payment ID';
 
-      console.log('alpha');
       pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
         .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
         .then(orderStatus => {
-          console.log('orderStatus', orderStatus);
+          console.log('orderStatus', JSON.stringify(orderStatus));
+          expect(orderStatus.isValid).to.be.true;
+          expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
           done();
         })
         .catch(done);
