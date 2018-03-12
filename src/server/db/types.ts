@@ -16,6 +16,8 @@ export class Order {
   status: OrderStatus;
   sendDate?: number;
   arriveDate?: number;
+  paymentReceipt?: string;
+  pwintyOrderId?: string;
 
   constructor() {
     this.pictureUrls = [];
