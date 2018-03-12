@@ -7,7 +7,7 @@ import { MessageActuator, TwilioClient } from './messages';
 import { DbClient, PpAccount } from './db';
 import { StatusActuator } from './status';
 import { SignupActuator } from './signup';
-const twilioKeys = require('../twilio-keys.json');
+const twilioKeys = require('../keys.json').twilio;
 
 const dbClient = new DbClient();
 const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY, process.env.PWINTY_ENV);

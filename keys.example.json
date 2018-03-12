@@ -1,0 +1,10 @@
+{
+  "twilio": {
+    "accountSid": "TWILIO-ACCOUNT-SID-GOES-HERE",
+    "authToken": "TWILIO-AUTH-TOKEN-GOES-HERE"
+  },
+  "pwinty": {
+    "merchantId": "PWINTY-MERCHANT-ID-GOES-HERE",
+    "apiKey": "PWINTY-API-KEY-GOES-HERE"
+  }
+}
