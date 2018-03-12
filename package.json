@@ -33,12 +33,14 @@
     "@types/body-parser": "^1.16.8",
     "@types/lodash": "^4.14.104",
     "@types/mongoose": "^5.0.7",
+    "@types/stripe": "^5.0.8",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "http": "0.0.0",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.9",
     "pwinty": "^2.3.1",
+    "stripe": "^5.5.0",
     "twilio": "^3.13.0"
   }
 }

@@ -1,14 +1,26 @@
+import * as Stripe from 'stripe';
+const stripeKeys = require('../../../keys.json').stripe;
+
 /**
   Client for interacting with the Stripe API
  */
 
 export class StripeClient {
-  public chargeCustomer(customerId: string, amount: number) {
-    return Promise.resolve(true);
+  private stripe: Stripe;
+
+  public init() {
+    this.stripe = new Stripe(stripeKeys.secretKey);
   }
 
-  public createCustomer(email: string, stripeToken: string): Promise<{ id: string }> { // : StripeCustomer
-    return Promise.resolve(email + stripeToken) // silly way of making customer id
-      .then(id => ({ id }));
+  public chargeCustomer(stripeCustomerId: string, amount: number) {
+    return this.stripe.charges.create({
+      amount,
+      currency: 'usd',
+      customer: stripeCustomerId
+    });
+  }
+
+  public createCustomer(email: string, stripeToken: string): Promise<Stripe.customers.ICustomer> {
+    return this.stripe.customers.create({ email, source: stripeToken })
   }
 }
