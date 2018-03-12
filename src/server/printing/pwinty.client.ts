@@ -10,7 +10,6 @@ const pwintyInit = require('pwinty');
 
 export class PwintyClient {
   private pwinty: any;
-  private currentOrder: any;
 
   constructor(private merchantId: string, private apiKey: string, private env: string = 'sandbox') { }
 
@@ -41,13 +40,23 @@ export class PwintyClient {
       .then(unsubmittedOrder => this.submitPwintyOrder(unsubmittedOrder))
   }
 
-  private createPwintyOrder(address: PwintyAddress): Promise<PwintyOrder> {
+  public getPwintyOrderStatus(order: Order) {
     return new Promise((resolve, reject) => {
-      this.pwinty.createOrder(address, (err: any, createdOrder: any) => err ? reject(err) : resolve(createdOrder));
-    })
+      this.pwinty.getOrderStatus(order.pwintyOrderId, (err: any, status: any) => err ? reject(err) : resolve(status))
+    });
   }
 
-  private addPhotosToPwintyOrder(order: Order): Promise<Order> {
+  /** Should be private members */
+
+  // Visible for testing
+  public createPwintyOrder(address: PwintyAddress): Promise<PwintyOrder> {
+    return new Promise((resolve, reject) => {
+      this.pwinty.createOrder(address, (err: any, createdOrder: any) => err ? reject(err) : resolve(createdOrder));
+    });
+  }
+
+  // Visible for testing
+  public addPhotosToPwintyOrder(order: Order): Promise<Order> {
     if (!order.pwintyOrderId) {
       throw new Error(`No pwinty order to add photos to`);
     }
@@ -82,7 +91,8 @@ export class PwintyClient {
       });
   }
 
-  private submitPwintyOrder(order: Order): Promise<void> {
+  // Visible for testing
+  public submitPwintyOrder(order: Order): Promise<void> {
     return new Promise((resolve, reject) => {
       this.pwinty.updateOrderStatus({
         id: order.pwintyOrderId,
