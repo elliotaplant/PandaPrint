@@ -1,13 +1,13 @@
 // Types for printing
 
 export interface PwintyAddress {
-  countryCode?: string;
-  recipientName?: string;
-  address1?: string;
+  countryCode: string;
+  recipientName: string;
+  address1: string;
   address2?: string;
-  addressTownOrCity?: string;
-  stateOrCounty?: string;
-  postalOrZipCode?: string;
+  addressTownOrCity: string;
+  stateOrCounty: string;
+  postalOrZipCode: string;
 }
 
 export interface PwintyOrder {
@@ -26,4 +26,11 @@ export interface PwintyPhotoOrder {
   url: string;
   copies: string;
   sizing: string;
+}
+
+export interface PwintyOrderStatus {
+  id: string;
+  isValid: boolean,
+  photos: PwintyPhoto[];
+  generalErrors: string[];
 }

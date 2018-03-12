@@ -3,13 +3,16 @@ import { ErrorActuator } from '../error';
 import { Order, Address } from '../db';
 import { PwintyAddress, PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
 import { PwintyClient } from './pwinty.client';
-const pwintyKeys = require('../keys.json').pwinty;
+const pwintyKeys = require('../../../keys.json').pwinty;
 
 /**
   Tests for the PwintyClient
 */
 
-describe('Db Client', () => {
+describe('Pwinty Client', function() {
+  // Increase the default timeout for these tests since they are hitting the sandbox pwinty api
+  this.timeout(5000);
+
   let pwintyClient: PwintyClient;
 
   beforeEach(() => {
@@ -17,15 +20,28 @@ describe('Db Client', () => {
     pwintyClient.init()
   });
 
-  describe('Account creation', () => {
-    it('should create accounts with only phone number', (done) => {
-      const mikeJonesPhone = '+12813308004';
-      pwintyClient.createAccountFromPhone(mikeJonesPhone)
-        .then(createdAccount => {
-          expect(createdAccount.phone).to.equal(mikeJonesPhone);
-          expect(createdAccount.currentOrder.pictureUrls).to.be.empty;
+  describe.only('Creating order', () => {
+    it('should create an order with a pwinty address', (done) => {
+      const pinappleUnderTheSea: PwintyAddress = {
+        countryCode: 'US',
+        recipientName: 'Sponge Bob',
+        address1: '124 Conch Street',
+        addressTownOrCity: 'Bikini Bottom',
+        stateOrCounty: 'Marshall Islands',
+        postalOrZipCode: '96970',
+      };
+
+      pwintyClient.createPwintyOrder(pinappleUnderTheSea)
+        .then(createdOrder => {
+          expect(createdOrder.id).to.have.length;
+          return pwintyClient.getPwintyOrderStatus(createdOrder.id)
         })
-        .then(() => done())
+        .then(orderStatus => {
+          expect(orderStatus.isValid).to.be.false;
+          expect(orderStatus.photos).to.be.empty;
+          expect(orderStatus.generalErrors).to.contain('NoItemsInOrder');
+          done();
+        })
         .catch(done);
     });
   });

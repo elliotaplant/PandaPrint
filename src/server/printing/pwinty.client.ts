@@ -1,6 +1,6 @@
 import { ErrorActuator } from '../error';
 import { Order, Address } from '../db';
-import { PwintyAddress, PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
+import { PwintyAddress, PwintyOrder, PwintyPhotoOrder, PwintyPhoto, PwintyOrderStatus } from './types';
 
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
@@ -40,9 +40,9 @@ export class PwintyClient {
       .then(unsubmittedOrder => this.submitPwintyOrder(unsubmittedOrder))
   }
 
-  public getPwintyOrderStatus(order: Order) {
+  public getPwintyOrderStatus(orderId: string): Promise<PwintyOrderStatus> {
     return new Promise((resolve, reject) => {
-      this.pwinty.getOrderStatus(order.pwintyOrderId, (err: any, status: any) => err ? reject(err) : resolve(status))
+      this.pwinty.getOrderStatus(orderId, (err: any, status: PwintyOrderStatus) => err ? reject(err) : resolve(status))
     });
   }
 
