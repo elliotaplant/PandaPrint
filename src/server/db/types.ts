@@ -2,12 +2,16 @@ import { Document } from 'mongoose'
 // A reflection of DB types
 
 // User account info
+
+// Address matches PwintyAddress requirements
 export interface Address {
-  street1: string;
-  street2?: string;
-  city: string;
-  state: string;
-  zip: string;
+  countryCode?: string;
+  recipientName?: string;
+  address1: string;
+  address2?: string;
+  addressTownOrCity: string;
+  stateOrCounty: string;
+  postalOrZipCode: string;
 }
 
 // Order types

@@ -46,11 +46,11 @@ describe('Db Client', () => {
         phone: '+16789998212',
         email: 'solja@boi.org',
         address: {
-          street1: soljaStreet,
-          street2: 'Unit 4',
-          city: 'East Atlana',
-          state: 'GA',
-          zip: '90210',
+          address1: soljaStreet,
+          address2: 'Unit 4',
+          addressTownOrCity: 'East Atlana',
+          stateOrCounty: 'GA',
+          postalOrZipCode: '90210',
         },
         firstName: 'Solja',
         lastName: 'Boi',
@@ -65,7 +65,7 @@ describe('Db Client', () => {
         .then(createdAccount => {
           expect(createdAccount.phone).to.equal(soljaBoi.phone);
           expect(createdAccount.email).to.equal(soljaBoi.email);
-          expect(createdAccount.address.street1).to.equal(soljaStreet);
+          expect(createdAccount.address.address1).to.equal(soljaStreet);
         })
         .then(() => done())
         .catch(done);
@@ -79,11 +79,11 @@ describe('Db Client', () => {
         phone: '+12813308004',
         email: 'mike@jones.org',
         address: {
-          street1: 'who?',
-          street2: 'mike jones',
-          city: 'East Atlana',
-          state: 'GA',
-          zip: '90210',
+          address1: 'who?',
+          address2: 'mike jones',
+          addressTownOrCity: 'East Atlana',
+          stateOrCounty: 'GA',
+          postalOrZipCode: '90210',
         },
         firstName: 'Mike',
         lastName: 'Jones',
@@ -99,7 +99,7 @@ describe('Db Client', () => {
         .then(updatedAccount => {
           expect(updatedAccount.phone).to.equal(mikeJonesPhone);
           expect(updatedAccount.firstName).to.equal(mikeJonesInfo.firstName);
-          expect(updatedAccount.address.street1).to.equal(mikeJonesInfo.address.street1);
+          expect(updatedAccount.address.address1).to.equal(mikeJonesInfo.address.address1);
           expect(updatedAccount.stripeCustId).to.equal(mikeJonesInfo.stripeCustId);
         })
         .then(() => done())

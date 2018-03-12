@@ -118,12 +118,12 @@ export class MessageActuator {
 
   public savedAndSendingMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
     // TODO: Add price to response
-    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.street1}.`
+    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.address1}.`
   }
 
   public sendingMessage(account: PpAccount): string {
     // TODO: Add price to response
-    return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.street1}.`
+    return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.address1}.`
   }
 
   public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody): string {

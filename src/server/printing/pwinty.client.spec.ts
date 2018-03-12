@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { ErrorActuator } from '../error';
 import { OrderStatus, Order, Address } from '../db';
-import { PwintyAddress, PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
+import { PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
 import { PwintyClient } from './pwinty.client';
 const pwintyKeys = require('../../../keys.json').pwinty;
 
@@ -14,7 +14,7 @@ describe('Pwinty Client', function() {
   this.timeout(5000);
 
   // Example address to use
-  const pinappleUnderTheSea: PwintyAddress = {
+  const pinappleUnderTheSea: Address = {
     countryCode: 'US',
     recipientName: 'Sponge Bob',
     address1: '124 Conch Street',
@@ -66,6 +66,18 @@ describe('Pwinty Client', function() {
         .then(orderStatus => {
           expect(orderStatus.isValid).to.be.true;
           expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('Submitting an order', () => {
+    it('should submit a fully valid order', (done) => {
+      pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
+        .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
+        .then(orderStatus => {
+          console.log('orderStatus', orderStatus);
           done();
         })
         .catch(done);

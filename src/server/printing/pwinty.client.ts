@@ -1,6 +1,6 @@
 import { ErrorActuator } from '../error';
-import { Order, Address } from '../db';
-import { PwintyAddress, PwintyOrder, PwintyPhotoOrder, PwintyPhoto, PwintyOrderStatus } from './types';
+import { Order, OrderStatus, Address } from '../db';
+import { PwintyOrder, PwintyPhotoOrder, PwintyPhoto, PwintyOrderStatus } from './types';
 
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
@@ -31,7 +31,7 @@ export class PwintyClient {
       }
     })
       //Create the pwinty order with user's info
-      .then(() => this.createPwintyOrder(this.addressToPwintyAddress(name, address)))
+      .then(() => this.createPwintyOrder({ ...address, recipientName: name }))
       // Set the pwinty order id on the PpOrder
       .then(pwintyOrder => ({ ...order, pwintyOrderId: pwintyOrder.id }))
       // Add photos from Order to PwintyOrder
@@ -49,7 +49,7 @@ export class PwintyClient {
   /** Should be private members */
 
   // Visible for testing
-  public createPwintyOrder(address: PwintyAddress): Promise<PwintyOrder> {
+  public createPwintyOrder(address: Address): Promise<PwintyOrder> {
     return new Promise((resolve, reject) => {
       this.pwinty.createOrder(address, (err: any, createdOrder: any) => err ? reject(err) : resolve(createdOrder));
     });
@@ -92,24 +92,16 @@ export class PwintyClient {
   }
 
   // Visible for testing
-  public submitPwintyOrder(order: Order): Promise<void> {
+  public submitPwintyOrder(order: Order): Promise<Order> {
     return new Promise((resolve, reject) => {
       this.pwinty.updateOrderStatus({
         id: order.pwintyOrderId,
         status: 'Submitted',
       }, (err: any, submited: any) => err ? reject(err) : resolve(submited));
+    })
+    .then(() => {
+      order.status = OrderStatus.Sending;
+      return order;
     });
-  }
-
-  private addressToPwintyAddress(name: string, address: Address): PwintyAddress {
-    return {
-      countryCode: 'US',
-      recipientName: name,
-      address1: address.street1,
-      address2: address.street2 || null,
-      addressTownOrCity: address.city,
-      stateOrCounty: address.state,
-      postalOrZipCode: address.zip
-    };
   }
 }

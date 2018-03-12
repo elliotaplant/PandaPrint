@@ -5,7 +5,7 @@ import { OrderStatus, PpAccount } from './types';
 /** File for defining the DB model for accounts only once */
 
 const AddressSchema = new Schema({
-  street1: String,
+  address1: String,
   street2: String,
   city: String,
   state: String,

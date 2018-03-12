@@ -1,15 +1,5 @@
 // Types for printing
 
-export interface PwintyAddress {
-  countryCode: string;
-  recipientName: string;
-  address1: string;
-  address2?: string;
-  addressTownOrCity: string;
-  stateOrCounty: string;
-  postalOrZipCode: string;
-}
-
 export interface PwintyOrder {
   id: string;
 }

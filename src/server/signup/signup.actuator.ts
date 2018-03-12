@@ -42,7 +42,7 @@ export class SignupActuator {
       lastName: signupAccountReq.lastName,
       email: signupAccountReq.email,
       address: {
-        street1: signupAccountReq.street1,
+        address1: signupAccountReq.address1,
         street2: signupAccountReq.street2,
         city: signupAccountReq.city,
         state: signupAccountReq.state,
