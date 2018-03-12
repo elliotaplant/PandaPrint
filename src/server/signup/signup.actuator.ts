@@ -2,6 +2,7 @@ import { DbClient, EntryPpAccount, PpAccount } from '../db';
 import { MessageActuator } from '../messages';
 import { StripeClient } from '../billing';
 import { SignupWithStripeId, SignupAccountRequest } from './types';
+import { ErrorActuator } from '../error';
 /**
   Actuator for signups from the front end
  */
@@ -11,13 +12,23 @@ export class SignupActuator {
 
   // This can be better
   public handleSignup(signupAccountReq: SignupAccountRequest): Promise<string> {
+    // First register the customer with a stripe account
     return this.stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken)
+     // Attach the stripe customer id to the request
      .then(customer => ({ ...signupAccountReq, stripeCustId: customer.id }))
+     // Sanitize the phone number in the request
      .then(signupReqWithStripe => this.accountReqSanitizePhone(signupReqWithStripe))
+     // Convert the signup form into the format used in DB
      .then(signupReq => this.signupRequestToEntryPpAccount(signupReq))
+     // Create the account in the DB
      .then(entryPpAcctReq => this.dbClient.createAccount(entryPpAcctReq))
-     .then(createdAccount => this.signupWelcomeMessage(createdAccount));
-     // .catch?
+     // Return the welcome message to send to user
+     .then(createdAccount => this.signupWelcomeMessage(createdAccount))
+     // Handle failures and notify user if possible
+     .catch(error => {
+       ErrorActuator.handleError(error, 'Failed to sign up user');
+       return `Sorry, but something went wrong when we tried to sign you up. We'll try to fix it on our end and let you know when we resolve it.`;
+     });
   }
 
   // private methods
@@ -47,6 +58,10 @@ export class SignupActuator {
   }
 
   private sanitizePhone(phone: string): string {
+    if (!phone) {
+      throw new Error('Non-existant phone number');
+    }
+
     const justDigits = phone.replace(/\D/g,'');
     if (phone.length > 10) {
       throw new Error('Recieved phone with less than 10 digits');
