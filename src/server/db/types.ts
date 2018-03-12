@@ -11,26 +11,14 @@ export interface Address {
 }
 
 // Order types
-export class Order {
+export interface Order {
   pictureUrls: string[];
+  // Is this denormalizing the data?
   status: OrderStatus;
   sendDate?: number;
   arriveDate?: number;
   paymentReceipt?: string;
   pwintyOrderId?: string;
-
-  constructor() {
-    this.pictureUrls = [];
-    this.status = OrderStatus.Open;
-  }
-
-  get isEmptyOrder(): boolean {
-    return this.pictureUrls.length === 0;
-  }
-
-  static emptyOrder(): Order {
-    return new Order();
-  }
 }
 
 export enum OrderStatus {

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from './billing.actuator';
 import { MockStripeClient } from './mock.stripe.client.spec';
-import { Order, EntryPpAccount } from '../db';
+import { Order, OrderStatus, EntryPpAccount } from '../db';
 
 // Spec file for BillingActuator
 describe('Billing Actuator', () => {
@@ -16,8 +16,10 @@ describe('Billing Actuator', () => {
 
   describe('Price Calculation', () => {
     it('should calculate price of order accurately', () => {
-      const fourPicOrder = new Order();
-      fourPicOrder.pictureUrls.push(...['pic1', 'pic2', 'pic3', 'pic4']);
+      const fourPicOrder: Order = {
+        pictureUrls: ['pic1', 'pic2', 'pic3', 'pic4'],
+        status: OrderStatus.Open,
+      };
 
       const calculatedPrice = billingActuator.calculatePriceForOrder(fourPicOrder);
       // hard code in price calculation. Shouls this test be less brittle?
@@ -25,7 +27,10 @@ describe('Billing Actuator', () => {
     });
 
     it('should calculate an empty order as zero dollars', () => {
-      const emptyOrder = new Order();
+      const emptyOrder: Order = {
+        pictureUrls: [],
+        status: OrderStatus.Open,
+      };
       const calculatedPrice = billingActuator.calculatePriceForOrder(emptyOrder);
       expect(calculatedPrice).to.equal(0);
     });
@@ -38,7 +43,11 @@ describe('Billing Actuator', () => {
 
     beforeEach(() => {
       account = { phone: '+12345678910' };
-      order = new Order();
+      order = {
+        pictureUrls: [],
+        status: OrderStatus.Open,
+      };
+
       stripeChargeStub = sinon.stub(stripeClient, 'chargeCustomer').returns(Promise.resolve(true));
     });
 

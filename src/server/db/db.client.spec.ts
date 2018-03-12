@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Address, Order, EntryPpAccount, PpAccount } from './types';
+import { Address, Order, OrderStatus, EntryPpAccount, PpAccount } from './types';
 import { DbClient } from './db.client';
 
 /**
@@ -54,7 +54,10 @@ describe('Db Client', () => {
         },
         firstName: 'Solja',
         lastName: 'Boi',
-        currentOrder: Order.emptyOrder(),
+        currentOrder: {
+          pictureUrls: [],
+          status: OrderStatus.Open,
+        },
         previousOrders: []
       };
 
