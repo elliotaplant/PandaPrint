@@ -83,7 +83,6 @@ describe('Pwinty Client', function() {
       pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
         .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
         .then(orderStatus => {
-          console.log('orderStatus', JSON.stringify(orderStatus));
           expect(orderStatus.isValid).to.be.true;
           expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
           done();
