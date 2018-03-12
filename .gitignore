@@ -5,6 +5,9 @@ node_modules
 dist
 *.js
 
-# Twilio keys
+# Compiled server tests
+dist-spec
+
+# API keys
 twilio-keys.json
 keys.json

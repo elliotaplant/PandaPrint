@@ -9,10 +9,12 @@
     ],
     "types": [
       "chai",
-      "node"
+      "node",
+      "mocha"
     ]
   },
   "include": [
     "**/*.spec.ts",
-  ]
+  ],
+  "exclude": []
 }
