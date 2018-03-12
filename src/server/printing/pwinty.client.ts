@@ -22,13 +22,15 @@ export class PwintyClient {
     return new Promise((resolve, reject) => {
       // If order not paid for, throw error
       if (!order.paymentReceipt) {
-        throw new Error('Attempting to print order that has not been paid for');
+        return reject('Attempting to print order that has not been paid for');
       }
 
       // If order has no photos, throw error
       if (!order.pictureUrls.length) {
-        throw new Error('Attempting to print order with no photos');
+        return reject('Attempting to print order with no photos');
       }
+
+      return resolve();
     })
       //Create the pwinty order with user's info
       .then(() => this.createPwintyOrder({ ...address, recipientName: name }))

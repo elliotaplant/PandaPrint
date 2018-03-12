@@ -14,23 +14,25 @@ describe('Pwinty Client', function() {
   this.timeout(5000);
 
   // Example address to use
-  const pinappleUnderTheSea: Address = {
-    countryCode: 'US',
-    recipientName: 'Sponge Bob',
-    address1: '124 Conch Street',
-    addressTownOrCity: 'Bikini Bottom',
-    stateOrCounty: 'Marshall Islands',
-    postalOrZipCode: '96970',
-  };
-
-  const photoOrder: Order = {
-    pictureUrls: ['https://goo.gl/vUZvpc', 'https://goo.gl/zZY3hr'],
-    status: OrderStatus.Open,
-  }
-
+  let pinappleUnderTheSea: Address;
+  let photoOrder: Order;
   let pwintyClient: PwintyClient;
 
   beforeEach(() => {
+    pinappleUnderTheSea = {
+      countryCode: 'US',
+      recipientName: 'Sponge Bob',
+      address1: '124 Conch Street',
+      addressTownOrCity: 'Bikini Bottom',
+      stateOrCounty: 'Marshall Islands',
+      postalOrZipCode: '96970',
+    };
+
+    photoOrder = {
+      pictureUrls: ['https://goo.gl/vUZvpc', 'https://goo.gl/zZY3hr'],
+      status: OrderStatus.Open,
+    }
+
     pwintyClient = new PwintyClient(pwintyKeys.merchantId, pwintyKeys.apiKey, 'sandbox');
     pwintyClient.init()
   });
@@ -72,8 +74,15 @@ describe('Pwinty Client', function() {
     });
   });
 
-  describe('Submitting an order', () => {
+  describe('Submitting an order', function() {
+    // Submitting an order takes even longer
+    this.timeout(10000);
+
     it('should submit a fully valid order', (done) => {
+      // Mark the payment as paid for
+      photoOrder.paymentReceipt = '123 Stripe Payment ID';
+
+      console.log('alpha');
       pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
         .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
         .then(orderStatus => {
@@ -81,6 +90,18 @@ describe('Pwinty Client', function() {
           done();
         })
         .catch(done);
+    });
+
+    it('should throw an error if trying to submit an unpayedfor order', (done) => {
+      // Mark the payment as not paid for
+      photoOrder.paymentReceipt = null;
+
+      pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
+        .then(() => done('Expected unpaid order to throw an error'))
+        .catch(error => {
+          expect(error).to.contain('not been paid');
+          done();
+        });
     });
   });
 });
