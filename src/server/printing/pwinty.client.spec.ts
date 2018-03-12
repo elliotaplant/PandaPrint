@@ -24,7 +24,7 @@ describe('Pwinty Client', function() {
   };
 
   const photoOrder: Order = {
-    pictureUrls: ['https://goo.gl/vUZvpc', 'https://goo.gl/73cm6d'],
+    pictureUrls: ['https://goo.gl/vUZvpc', 'https://goo.gl/zZY3hr'],
     status: OrderStatus.Open,
   }
 
@@ -53,7 +53,7 @@ describe('Pwinty Client', function() {
   });
 
   describe('Adding photos to order', () => {
-    it('should create an order with a pwinty address', (done) => {
+    it('should add photos to an order', (done) => {
       pwintyClient.createPwintyOrder(pinappleUnderTheSea)
         .then(pwintyOrder => (<Order>{ ...photoOrder, pwintyOrderId: pwintyOrder.id }))
         .then(createdOrder => pwintyClient.addPhotosToPwintyOrder(createdOrder) )
@@ -65,8 +65,7 @@ describe('Pwinty Client', function() {
         .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
         .then(orderStatus => {
           expect(orderStatus.isValid).to.be.true;
-          expect(orderStatus.photos).to.have.length(2);
-          console.log('orderStatus', orderStatus);
+          expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
           done();
         })
         .catch(done);
