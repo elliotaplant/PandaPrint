@@ -4,8 +4,7 @@
   "description": "Print photos with text messages",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register src/server/**/*.spec.ts",
-    "test2": "tsc -p tsconfig.spec.json && mocha dist/server-spec/**/*.spec.js",
+    "test": "tsc -p tsconfig.spec.json && mocha dist/server-spec/**/*.spec.js",
     "build": "tsc",
     "start": "tsc && node dist/server/app.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js"
