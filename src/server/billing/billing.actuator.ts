@@ -21,7 +21,7 @@ export class BillingActuator {
     if (!account.stripeCustId) {
       throw new Error('Attempting to charge a customer without a Stripe Customer ID.');
     }
-    if (order.isEmptyOrder) {
+    if (order.pictureUrls.length === 0) {
       throw new Error('Attempting to charge a customer for an empty order.');
     }
     return this.stripeClient.chargeCustomer(account.stripeCustId, this.calculatePriceForOrder(order));

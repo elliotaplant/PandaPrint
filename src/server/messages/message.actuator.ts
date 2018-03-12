@@ -79,7 +79,8 @@ export class MessageActuator {
   private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
     if (this.isFullAccount(account)) {
       // Use pwinty client to create and send order
-      this.pwintyClient.sendOrderToPwinty(account.currentOrder)
+      this.pwintyClient.sendOrderToPwinty(account.currentOrder, account.address,
+        `${account.firstName} ${account.lastName}`)
         // Use billing client to charge user
         .then(() => this.billingActuator.chargeCustomerForOrder(account, account.currentOrder))
         .then(() => {
