@@ -10,7 +10,7 @@ import { SignupActuator } from './signup';
 import { StatusActuator } from './status';
 
 const dbClient = new DbClient();
-const pwintyClient = new PwintyClient(process.env.PWINTY_ENV);
+const pwintyClient = new PwintyClient();
 const twilioClient = new TwilioClient();
 const stripeClient = new StripeClient();
 const statusActuator = new StatusActuator(dbClient);

@@ -20,7 +20,7 @@ describe('Message Actuator', () => {
 
   beforeEach(() => {
     mockDbClient = new MockDbClient();
-    pwintyClient = new PwintyClient('merchantId', 'apiKey');
+    pwintyClient = new PwintyClient();
     mockBillingActuator = new MockBillingActuator();
     messageActuator = new MessageActuator(mockDbClient, pwintyClient, mockBillingActuator);
 

@@ -5,7 +5,8 @@
   },
   "pwinty": {
     "merchantId": "PWINTY-MERCHANT-ID-GOES-HERE",
-    "apiKey": "PWINTY-API-KEY-GOES-HERE"
+    "apiKey": "PWINTY-API-KEY-GOES-HERE",
+    "env": "sandbox"
   },
   "stripe": {
     "PublishableKey": "STRIPE-PUBLISHABLE-KEY-GOES-HERE",

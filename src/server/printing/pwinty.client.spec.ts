@@ -34,9 +34,7 @@ describe('Pwinty Client', function() {
       status: OrderStatus.Open,
     };
 
-    const merchantId = Utils.getKey('PWINTY_MERCHANT_ID');
-    const apiKey = Utils.getKey('PWINTY_API_KEY');
-    pwintyClient = new PwintyClient(merchantId, apiKey, 'sandbox');
+    pwintyClient = new PwintyClient();
     pwintyClient.init();
   });
 

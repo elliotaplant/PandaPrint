@@ -44,6 +44,9 @@ export class Utils {
           case 'PWINTY_API_KEY': {
             return allKeys.pwinty.apiKey;
           }
+          case 'PWINTY_ENV': {
+            return allKeys.pwinty.env;
+          }
           case 'STRIPE_PUBLISHABLE_KEY': {
             return allKeys.stripe.publishableKey;
           }

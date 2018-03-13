@@ -12,12 +12,12 @@ const pwintyInit = require('pwinty');
 export class PwintyClient {
   private pwinty: any;
 
-  constructor(private env: string = 'sandbox') { }
+  constructor() { }
 
   public init() {
     const merchantId = Utils.getKey('PWINTY_MERCHANT_ID');
     const apiKey = Utils.getKey('PWINTY_API_KEY');
-    this.pwinty = pwintyInit(merchantId, apiKey, `https://${this.env}.pwinty.com/v2.5/`);
+    this.pwinty = pwintyInit(merchantId, apiKey, `https://${Utils.getKey('PWINTY_ENV')}.pwinty.com/v2.5/`);
   }
 
   public sendOrderToPwinty(order: IOrder, address: IAddress, name: string) {
