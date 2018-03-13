@@ -7,11 +7,10 @@ import { MessageActuator, TwilioClient } from './messages';
 import { DbClient, PpAccount } from './db';
 import { StatusActuator } from './status';
 import { SignupActuator } from './signup';
-const twilioKeys = require('../../keys.json').twilio;
 
 const dbClient = new DbClient();
 const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY, process.env.PWINTY_ENV);
-const twilioClient = new TwilioClient(twilioKeys.accountSid, twilioKeys.authToken);
+const twilioClient = new TwilioClient();
 const stripeClient = new StripeClient();
 const statusActuator = new StatusActuator(dbClient);
 const billingActuator = new BillingActuator(stripeClient);

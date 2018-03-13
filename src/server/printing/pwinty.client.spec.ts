@@ -3,7 +3,7 @@ import { ErrorActuator } from '../error';
 import { OrderStatus, Order, Address } from '../db';
 import { PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
 import { PwintyClient } from './pwinty.client';
-const pwintyKeys = require('../../../keys.json').pwinty;
+import { Utils } from '../utils';
 
 /**
   Tests for the PwintyClient
@@ -33,7 +33,9 @@ describe('Pwinty Client', function() {
       status: OrderStatus.Open,
     }
 
-    pwintyClient = new PwintyClient(pwintyKeys.merchantId, pwintyKeys.apiKey, 'sandbox');
+    const merchantId = Utils.getKey('PWINTY_MERCHANT_ID');
+    const apiKey = Utils.getKey('PWINTY_API_KEY');
+    pwintyClient = new PwintyClient(merchantId, apiKey, 'sandbox');
     pwintyClient.init()
   });
 

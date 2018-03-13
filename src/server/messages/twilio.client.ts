@@ -1,4 +1,5 @@
 import * as twilio from 'twilio';
+import { Utils } from '../utils';
 
 /**
   A client to interact with the twilio API
@@ -6,15 +7,14 @@ import * as twilio from 'twilio';
 
 export class TwilioClient {
   private twilio: any;
-  private currentOrder: any;
-
-  constructor(private accountSid: string, private authToken: string) { }
 
   public init() {
-    this.twilio = new twilio.RestClient(this.accountSid, this.authToken);
+    const accountSid = Utils.getKey('TWILIO_ACCOUNT_SID');
+    const authToken = Utils.getKey('TWILIO_AUTH_TOKEN');
+    this.twilio = new twilio.RestClient(accountSid, authToken);
   }
 
   public sendMessageToNumber(message: string, number: string) {
-
+    // TODO: this
   }
 }

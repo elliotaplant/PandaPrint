@@ -1,5 +1,5 @@
 import * as Stripe from 'stripe';
-const stripeKeys = require('../../../keys.json').stripe;
+import { Utils } from '../utils';
 
 /**
   Client for interacting with the Stripe API
@@ -9,7 +9,7 @@ export class StripeClient {
   private stripe: Stripe;
 
   public init() {
-    this.stripe = new Stripe(stripeKeys.secretKey);
+    this.stripe = new Stripe(Utils.getKey('STRIPE_SECRET_KEY'));
   }
 
   public createCustomer(email: string, stripeToken: string): Promise<Stripe.customers.ICustomer> {
