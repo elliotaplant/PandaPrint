@@ -6,8 +6,8 @@ import { PwintyClient } from './pwinty.client';
 import { IPwintyOrder, IPwintyPhoto, IPwintyPhotoOrder } from './types';
 
 /**
-  Tests for the PwintyClient
-*/
+ * Tests for the PwintyClient
+ */
 
 describe('Pwinty Client', function() {
   // Increase the default timeout for these tests since they are hitting the sandbox pwinty api
@@ -20,12 +20,12 @@ describe('Pwinty Client', function() {
 
   beforeEach(() => {
     pinappleUnderTheSea = {
-      countryCode: 'US',
-      recipientName: 'Sponge Bob',
       address1: '124 Conch Street',
       addressTownOrCity: 'Bikini Bottom',
-      stateOrCounty: 'Marshall Islands',
+      countryCode: 'US',
       postalOrZipCode: '96970',
+      recipientName: 'Sponge Bob',
+      stateOrCounty: 'Marshall Islands',
     };
 
     photoOrder = {

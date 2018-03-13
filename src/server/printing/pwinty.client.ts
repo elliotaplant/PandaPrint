@@ -44,7 +44,8 @@ export class PwintyClient {
 
   public getPwintyOrderStatus(orderId: string): Promise<IPwintyOrderStatus> {
     return new Promise((resolve, reject) => {
-      this.pwinty.getOrderStatus(orderId, (err: any, status: IPwintyOrderStatus) => err ? reject(err) : resolve(status));
+      this.pwinty.getOrderStatus(orderId,
+        (err: any, status: IPwintyOrderStatus) => err ? reject(err) : resolve(status));
     });
   }
 

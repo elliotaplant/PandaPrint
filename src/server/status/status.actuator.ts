@@ -1,7 +1,7 @@
 import { DbClient } from '../db';
 /**
-  A actuator for displaying the app status
-  */
+ * A actuator for displaying the app status
+ */
 
 export class StatusActuator {
   constructor(private dbClient: DbClient) { }

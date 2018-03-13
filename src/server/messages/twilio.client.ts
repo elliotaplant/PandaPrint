@@ -2,8 +2,8 @@ import * as twilio from 'twilio';
 import { Utils } from '../utils';
 
 /**
-  A client to interact with the twilio API
-*/
+ * A client to interact with the twilio API
+ */
 
 export class TwilioClient {
   private twilio: any;
@@ -14,7 +14,7 @@ export class TwilioClient {
     this.twilio = new twilio.RestClient(accountSid, authToken);
   }
 
-  public sendMessageToNumber(message: string, number: string) {
+  public sendMessageToPhone(message: string, phone: string) {
     // TODO: this
   }
 }

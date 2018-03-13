@@ -7,6 +7,7 @@ import { IEntryPpAccount, IPpAccount } from './types';
  */
 export class DbClient {
 
+  // tslint:disable
   public init(): Promise<void> {
     const mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/pandaprint';
 
@@ -25,6 +26,7 @@ export class DbClient {
         console.error(error);
       });
   }
+  // tslint:enable
 
   public loadAccountByPhone(phone: string): Promise<IPpAccount> {
     return Account.findOne({ phone }).then();

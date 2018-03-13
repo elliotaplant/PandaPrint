@@ -28,8 +28,8 @@ export class MockDbClient extends DbClient {
   public createAccountFromPhone(phone: string): Promise<IPpAccount> {
     return new Promise((resolve) => {
       const newAccount: any = {
-        phone,
         currentOrder: { pictureUrls: [] },
+        phone,
         previousOrders: [],
       };
       this.accounts.set(newAccount.phone, newAccount);

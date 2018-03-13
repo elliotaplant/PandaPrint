@@ -43,21 +43,21 @@ describe('Db Client', () => {
     it('should create accounts with a full profile', (done) => {
       const soljaStreet = '1234 Solja St.';
       const soljaBoi: IEntryPpAccount = {
-        phone: '+16789998212',
-        email: 'solja@boi.org',
         address: {
           address1: soljaStreet,
           address2: 'Unit 4',
           addressTownOrCity: 'East Atlana',
-          stateOrCounty: 'GA',
           postalOrZipCode: '90210',
+          stateOrCounty: 'GA',
         },
-        firstName: 'Solja',
-        lastName: 'Boi',
         currentOrder: {
           pictureUrls: [],
           status: OrderStatus.Open,
         },
+        email: 'solja@boi.org',
+        firstName: 'Solja',
+        lastName: 'Boi',
+        phone: '+16789998212',
         previousOrders: [],
       };
 
@@ -76,17 +76,17 @@ describe('Db Client', () => {
     it('should update an account with shipping and billing info', (done) => {
       const mikeJonesPhone = '+12813308004';
       const mikeJonesInfo: IEntryPpAccount = {
-        phone: '+12813308004',
-        email: 'mike@jones.org',
         address: {
           address1: 'who?',
           address2: 'mike jones',
           addressTownOrCity: 'East Atlana',
-          stateOrCounty: 'GA',
           postalOrZipCode: '90210',
+          stateOrCounty: 'GA',
         },
+        email: 'mike@jones.org',
         firstName: 'Mike',
         lastName: 'Jones',
+        phone: '+12813308004',
         stripeCustId: 'FLOSSIN',
       };
 

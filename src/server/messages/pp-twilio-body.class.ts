@@ -3,8 +3,8 @@ import { Utils } from '../utils';
 import { ITwilioBody } from './types';
 
 /**
-  Class to make interacting with twilio messages easier
-  */
+ * Class to make interacting with twilio messages easier
+ */
 export class PpTwilioBody {
   public text: string;
   public mediaUrls: string[];

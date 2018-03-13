@@ -4,7 +4,7 @@ import { ErrorActuator } from '../error';
 import { MessageActuator } from '../messages';
 import { ISignupAccountRequest, ISignupWithStripeId } from './types';
 /**
-  Actuator for signups from the front end
+ * Actuator for signups from the front end
  */
 
 export class SignupActuator {
@@ -39,17 +39,17 @@ export class SignupActuator {
   // TODO: Get a front end for signups
   private signupRequestToEntryPpAccount(signupAccountReq: ISignupAccountRequest): IEntryPpAccount {
     return {
-      firstName: signupAccountReq.firstName,
-      lastName: signupAccountReq.lastName,
-      email: signupAccountReq.email,
       address: {
-        countryCode: 'US',
         address1: signupAccountReq.address1,
         address2: signupAccountReq.address2 || null,
         addressTownOrCity: signupAccountReq.city,
-        stateOrCounty: signupAccountReq.state,
+        countryCode: 'US',
         postalOrZipCode: signupAccountReq.zip,
+        stateOrCounty: signupAccountReq.state,
       },
+      email: signupAccountReq.email,
+      firstName: signupAccountReq.firstName,
+      lastName: signupAccountReq.lastName,
       phone: signupAccountReq.phone, // this needs sanitization
     };
   }

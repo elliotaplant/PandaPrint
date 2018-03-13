@@ -7,7 +7,7 @@ import { PpTwilioBody } from './pp-twilio-body.class';
 import { ITwilioBody } from './types';
 
 /**
-  Actuator for recieved messages
+ * Actuator for recieved messages
  */
 
 export class MessageActuator {
@@ -17,7 +17,8 @@ export class MessageActuator {
 
   public readonly unknownAddressMessage = `Unfortunately we can't send your order until we have your address. Could you go to www.PandaPrint.co to sign up? Thanks!`;
 
-  constructor(private dbClient: DbClient, private pwintyClient: PwintyClient, private billingActuator: BillingActuator) { }
+  constructor(private dbClient: DbClient, private pwintyClient: PwintyClient,
+    private billingActuator: BillingActuator) { }
 
   // Handle an incoming message and return the response to send to the user
   public handleMessage(twilioBody: ITwilioBody): Promise<string> {
@@ -41,19 +42,53 @@ export class MessageActuator {
       });
   }
 
+  public handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
+    // TODO: Add price
+    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`;
+  }
+
+  public handlePricingMessage(account: IPpAccount) {
+    // TODO: Add billing utils to determine order price
+    const numPicsInOrder = account.currentOrder.pictureUrls.length;
+    return `You have ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`;
+  }
+
+  public unknownMessageResponse() {
+    return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
+  }
+
+  public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
+    // TODO: Add price to response
+    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.address1}.`;
+  }
+
+  public sendingMessage(account: IPpAccount): string {
+    // TODO: Add price to response
+    return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.address1}.`;
+  }
+
+  public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody): string {
+    return `We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`;
+  }
+
+  public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
+    const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
+    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+  }
+
   // private methods
   private handleMsgForExistingAccount(twilioBody: PpTwilioBody, account: IPpAccount): Promise<string> {
     // First, save any pictures to the user's current order
     return this.dbClient.addPhotosToUsersCurrentOrder(twilioBody.mediaUrls, account.phone)
-      .then((account) => {
+      .then((accountWithPhotos) => {
         // Handle the message as depending on the text content (or lack thereof)
         if (twilioBody.isPricingMessage) {
           // Note that pricing comes before send messages, just in case the user does both but is confused about price
-          return this.handlePricingMessage(account);
+          return this.handlePricingMessage(accountWithPhotos);
         } else if (twilioBody.isSendMessage) {
-          return this.handleSendMessage(twilioBody, account);
+          return this.handleSendMessage(twilioBody, accountWithPhotos);
         } else if (twilioBody.isPictureOnlyMessage) {
-          return this.handlePicturesOnlyMessage(twilioBody, account);
+          return this.handlePicturesOnlyMessage(twilioBody, accountWithPhotos);
         } else {
           return this.unknownMessageResponse();
         }
@@ -98,40 +133,6 @@ export class MessageActuator {
         return Promise.resolve(this.unknownAddressMessage);
       }
     }
-  }
-
-  public handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
-    // TODO: Add price
-    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`;
-  }
-
-  public handlePricingMessage(account: IPpAccount) {
-    // TODO: Add billing utils to determine order price
-    const numPicsInOrder = account.currentOrder.pictureUrls.length;
-    return `You have ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`;
-  }
-
-  public unknownMessageResponse() {
-    return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
-  }
-
-  public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
-    // TODO: Add price to response
-    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.address1}.`;
-  }
-
-  public sendingMessage(account: IPpAccount): string {
-    // TODO: Add price to response
-    return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.address1}.`;
-  }
-
-  public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody): string {
-    return `We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}, but we can't send your order until we have your address to send it to. Could you go to www.PandaPrint.co to sign up? Thanks!`;
-  }
-
-  public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
-    const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
-    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
   }
 
   private isFullAccount(account: IPpAccount) {
