@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as Stripe from 'stripe';
 import { IEntryPpAccount, IOrder, OrderStatus } from '../db';
+import { TestUtils } from '../utils/index.spec';
 import { StripeClient } from './stripe.client';
 
 /**
@@ -25,32 +26,35 @@ describe('Stripe Client', function() {
     exampleCardToken = 'tok_visa';
   });
 
-  describe('Create customer', () => {
-    it('should create a customer with an email', () => {
-      return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
-        .then((stripeCustomer) => {
-          expect(stripeCustomer.id).to.not.be.empty;
-          expect(stripeCustomer.email).to.equal(exampleCustomerEmail);
-        });
-    });
-  });
+  TestUtils.ifApiTests(() => {
 
-  describe('Charge customer', () => {
-    let createdCustomerId: string;
-    let exampleChargeAmount: number;
-
-    beforeEach(() => {
-      exampleChargeAmount = 420; // blaze up
-      return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
-        .then((createdCustomer) => createdCustomerId = createdCustomer.id);
+    describe('Create customer', () => {
+      it('should create a customer with an email', () => {
+        return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
+          .then((stripeCustomer) => {
+            expect(stripeCustomer.id).to.not.be.empty;
+            expect(stripeCustomer.email).to.equal(exampleCustomerEmail);
+          });
+      });
     });
 
-    it('should create a customer with an email', () => {
-      return stripeClient.chargeCustomer(createdCustomerId, exampleChargeAmount)
-        .then((charge) => {
-          expect(charge.customer).to.equal(createdCustomerId);
-          expect(charge.amount).to.equal(exampleChargeAmount);
-        });
+    describe('Charge customer', () => {
+      let createdCustomerId: string;
+      let exampleChargeAmount: number;
+
+      beforeEach(() => {
+        exampleChargeAmount = 420; // blaze up
+        return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
+          .then((createdCustomer) => createdCustomerId = createdCustomer.id);
+      });
+
+      it('should create a customer with an email', () => {
+        return stripeClient.chargeCustomer(createdCustomerId, exampleChargeAmount)
+          .then((charge) => {
+            expect(charge.customer).to.equal(createdCustomerId);
+            expect(charge.amount).to.equal(exampleChargeAmount);
+          });
+      });
     });
   });
 });

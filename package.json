@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc -p tsconfig.spec.json && mocha dist/server-spec/**/*.spec.js",
+    "test:long": "npm run test -- --api",
     "build": "tsc",
     "start": "tsc && node dist/server/app.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js"
