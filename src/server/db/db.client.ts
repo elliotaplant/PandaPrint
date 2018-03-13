@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
 import { Account } from './account.model';
-import { EntryPpAccount, PpAccount } from './types';
+import { IEntryPpAccount, IPpAccount } from './types';
 
 /**
-  A client for interacting with the database
-  */
+ * A client for interacting with the database
+ */
 export class DbClient {
 
   public init(): Promise<void> {
@@ -26,19 +26,19 @@ export class DbClient {
       });
   }
 
-  public loadAccountByPhone(phone: string): Promise<PpAccount> {
+  public loadAccountByPhone(phone: string): Promise<IPpAccount> {
     return Account.findOne({ phone }).then();
   }
 
-  public createAccount(newAccount: EntryPpAccount): Promise<PpAccount> {
+  public createAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
     return Account.create(newAccount);
   }
 
-  public createAccountFromPhone(phone: string): Promise<PpAccount> {
+  public createAccountFromPhone(phone: string): Promise<IPpAccount> {
     return Account.create({ phone });
   }
 
-  public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
+  public updateAccount(updatedAccount: IEntryPpAccount): Promise<IPpAccount> {
     return Account.findOne({ phone: updatedAccount.phone })
       .then((found) => {
         found.set(updatedAccount);

@@ -1,8 +1,10 @@
 import { Model, Schema } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { OrderStatus, PpAccount } from './types';
+import { IPpAccount, OrderStatus } from './types';
 
-/** File for defining the DB model for accounts only once */
+/**
+ * File for defining the DB model for accounts only once
+ */
 
 const AddressSchema = new Schema({
   address1: String,
@@ -13,21 +15,21 @@ const AddressSchema = new Schema({
 });
 
 const OrderSchema = new Schema({
-  pictureUrls: { type: [String], default: [] }, // somehow make this mandatory on creation
-  status: { type: Number, default: OrderStatus.Open },
-  sendDate: Date,
   arriveDate: Date,
+  pictureUrls: { type: [String], default: [] }, // somehow make this mandatory on creation
+  sendDate: Date,
+  status: { type: Number, default: OrderStatus.Open },
 });
 
 const AccountSchema = new Schema({
+  address: AddressSchema,
+  currentOrder: { type: OrderSchema, default: OrderSchema }, // somehow make this mandatory new IOrder on creation
+  email: String,
   firstName: String,
   lastName: String,
-  email: String,
-  address: AddressSchema,
   phone: String,
-  currentOrder: { type: OrderSchema, default: OrderSchema }, // somehow make this mandatory new Order on creation
   previousOrders: [OrderSchema], // somehow make this mandatory [] on creation
   stripeCustId: String,
 });
 
-export const Account: Model<PpAccount> = mongoose.model('Account', AccountSchema);
+export const Account: Model<IPpAccount> = mongoose.model('Account', AccountSchema);

@@ -1,7 +1,7 @@
 // Messaging types
 
 // Twilio types
-export interface TwilioBody {
+export interface ITwilioBody {
   ToCountry: string;
   ToState: string;
   SmsMessageSid: string;

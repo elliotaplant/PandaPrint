@@ -1,7 +1,7 @@
-import { EntryPpAccount, Order } from '../db';
+import { IEntryPpAccount, IOrder } from '../db';
 import { StripeClient } from './stripe.client';
 /**
-  Actuator for billing
+ * Actuator for billing
  */
 
 export class BillingActuator {
@@ -10,14 +10,14 @@ export class BillingActuator {
 
   constructor(private stripeClient: StripeClient) { }
 
-  public calculatePriceForOrder(order: Order): number {
+  public calculatePriceForOrder(order: IOrder): number {
     if (order.pictureUrls.length === 0) {
       return 0;
     }
     return this.shippingPrice + order.pictureUrls.length * this.pricePerPhoto;
   }
 
-  public chargeCustomerForOrder(account: EntryPpAccount, order: Order) {
+  public chargeCustomerForOrder(account: IEntryPpAccount, order: IOrder) {
     if (!account.stripeCustId) {
       throw new Error('Attempting to charge a customer without a Stripe Customer ID.');
     }

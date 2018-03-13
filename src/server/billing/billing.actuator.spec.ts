@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { EntryPpAccount, Order, OrderStatus } from '../db';
+import { IEntryPpAccount, IOrder, OrderStatus } from '../db';
 import { BillingActuator } from './billing.actuator';
 import { MockStripeClient } from './mock.stripe.client.spec';
 
@@ -16,7 +16,7 @@ describe('Billing Actuator', () => {
 
   describe('Price Calculation', () => {
     it('should calculate price of order accurately', () => {
-      const fourPicOrder: Order = {
+      const fourPicOrder: IOrder = {
         pictureUrls: ['pic1', 'pic2', 'pic3', 'pic4'],
         status: OrderStatus.Open,
       };
@@ -27,7 +27,7 @@ describe('Billing Actuator', () => {
     });
 
     it('should calculate an empty order as zero dollars', () => {
-      const emptyOrder: Order = {
+      const emptyOrder: IOrder = {
         pictureUrls: [],
         status: OrderStatus.Open,
       };
@@ -38,8 +38,8 @@ describe('Billing Actuator', () => {
 
   describe('Customer charging', () => {
     let stripeChargeStub: sinon.SinonStub;
-    let account: EntryPpAccount;
-    let order: Order;
+    let account: IEntryPpAccount;
+    let order: IOrder;
 
     beforeEach(() => {
       account = { phone: '+12345678910' };

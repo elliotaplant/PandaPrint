@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { Address, Order, OrderStatus } from '../db';
+import { IAddress, IOrder, OrderStatus } from '../db';
 import { ErrorActuator } from '../error';
 import { Utils } from '../utils';
 import { PwintyClient } from './pwinty.client';
-import { PwintyOrder, PwintyPhoto, PwintyPhotoOrder } from './types';
+import { IPwintyOrder, IPwintyPhoto, IPwintyPhotoOrder } from './types';
 
 /**
   Tests for the PwintyClient
@@ -14,8 +14,8 @@ describe('Pwinty Client', function() {
   this.timeout(30000);
 
   // Example address to use
-  let pinappleUnderTheSea: Address;
-  let photoOrder: Order;
+  let pinappleUnderTheSea: IAddress;
+  let photoOrder: IOrder;
   let pwintyClient: PwintyClient;
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe('Pwinty Client', function() {
     // Ignored because pwinty sandbox api is flaky
     xit('should add photos to an order', (done) => {
       pwintyClient.createPwintyOrder(pinappleUnderTheSea)
-        .then((pwintyOrder) => ({ ...photoOrder, pwintyOrderId: pwintyOrder.id } as Order))
+        .then((pwintyOrder) => ({ ...photoOrder, pwintyOrderId: pwintyOrder.id } as IOrder))
         .then((createdOrder) => pwintyClient.addPhotosToPwintyOrder(createdOrder) )
         .then((orderWithPhotos) => {
           // Adding photos to order should return the original order and leave the order open

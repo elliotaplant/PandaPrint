@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { DbClient } from './db.client';
-import { Address, EntryPpAccount, Order, OrderStatus, PpAccount } from './types';
+import { IAddress, IEntryPpAccount, IOrder, IPpAccount, OrderStatus } from './types';
 
 /**
-  A client for interacting with the database
-  */
+ * A client for interacting with the database
+ */
 
 describe('Db Client', () => {
   let dbClient: DbClient;
@@ -42,7 +42,7 @@ describe('Db Client', () => {
 
     it('should create accounts with a full profile', (done) => {
       const soljaStreet = '1234 Solja St.';
-      const soljaBoi: EntryPpAccount = {
+      const soljaBoi: IEntryPpAccount = {
         phone: '+16789998212',
         email: 'solja@boi.org',
         address: {
@@ -75,7 +75,7 @@ describe('Db Client', () => {
   describe('Account updating', () => {
     it('should update an account with shipping and billing info', (done) => {
       const mikeJonesPhone = '+12813308004';
-      const mikeJonesInfo: EntryPpAccount = {
+      const mikeJonesInfo: IEntryPpAccount = {
         phone: '+12813308004',
         email: 'mike@jones.org',
         address: {

@@ -2,7 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 
 import { BillingActuator, StripeClient } from './billing';
-import { DbClient, PpAccount } from './db';
+import { DbClient, IPpAccount } from './db';
 import { MessageActuator, TwilioClient } from './messages';
 import { PwintyClient } from './printing';
 import { SignupActuator } from './signup';

@@ -2,7 +2,7 @@ import * as Stripe from 'stripe';
 import { Utils } from '../utils';
 
 /**
-  Client for interacting with the Stripe API
+ * Client for interacting with the Stripe API
  */
 
 export class StripeClient {

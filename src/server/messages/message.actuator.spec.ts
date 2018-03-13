@@ -2,16 +2,16 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from '../billing';
 import { MockBillingActuator } from '../billing/index.spec';
-import { Order, PpAccount } from '../db';
+import { IOrder, IPpAccount } from '../db';
 import { MockDbClient } from '../db/index.spec';
 import { PwintyClient } from '../printing';
 import { MessageActuator } from './message.actuator';
 import { MockTwilioClient } from './mock.twilio.client.spec';
-import { TwilioBody } from './types';
+import { ITwilioBody } from './types';
 
 // Spec file for BillingActuator
 describe('Message Actuator', () => {
-  let textOnlyMessage: TwilioBody;
+  let textOnlyMessage: ITwilioBody;
 
   let messageActuator: MessageActuator;
   let mockBillingActuator: MockBillingActuator;

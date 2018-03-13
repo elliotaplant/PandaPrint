@@ -1,23 +1,23 @@
 import { DbClient } from './db.client';
-import { Address, EntryPpAccount, Order, PpAccount } from './types';
+import { IAddress, IEntryPpAccount, IOrder, IPpAccount } from './types';
 
 /**
-  A mock to in memory db to represent the DbClient
-  */
+ * A mock to in memory db to represent the DbClient
+ */
 
 export class MockDbClient extends DbClient {
   // Private in-memory DB
-  private accounts: Map<string, PpAccount> = new Map();
+  private accounts: Map<string, IPpAccount> = new Map();
 
   // Overrides
-  public loadAccountByPhone(phone: string): Promise<PpAccount> {
+  public loadAccountByPhone(phone: string): Promise<IPpAccount> {
     return new Promise((resolve) => {
       const foundAccount = this.accounts.get(phone);
       resolve(foundAccount);
     });
   }
 
-  public createAccount(newAccount: EntryPpAccount): Promise<PpAccount> {
+  public createAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
     return new Promise((resolve) => {
       this.accounts.set(newAccount.phone, newAccount as any);
       const foundAccount = this.accounts.get(newAccount.phone);
@@ -25,7 +25,7 @@ export class MockDbClient extends DbClient {
     });
   }
 
-  public createAccountFromPhone(phone: string): Promise<PpAccount> {
+  public createAccountFromPhone(phone: string): Promise<IPpAccount> {
     return new Promise((resolve) => {
       const newAccount: any = {
         phone,
@@ -38,7 +38,7 @@ export class MockDbClient extends DbClient {
     });
   }
 
-  public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
+  public updateAccount(updatedAccount: IEntryPpAccount): Promise<IPpAccount> {
     return new Promise((resolve) => {
       this.accounts.set(updatedAccount.phone, updatedAccount as any);
       const foundAccount = this.accounts.get(updatedAccount.phone);

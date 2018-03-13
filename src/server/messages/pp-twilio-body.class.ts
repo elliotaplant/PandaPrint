@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Utils } from '../utils';
-import { TwilioBody } from './types';
+import { ITwilioBody } from './types';
 
 /**
   Class to make interacting with twilio messages easier
@@ -10,7 +10,7 @@ export class PpTwilioBody {
   public mediaUrls: string[];
   public phone: string;
 
-  constructor(twilioBody: TwilioBody) {
+  constructor(twilioBody: ITwilioBody) {
     this.text = twilioBody.Body;
     this.mediaUrls = this.getMediaUrlsFromTwilioBody(twilioBody);
     this.phone = twilioBody.From;
@@ -36,7 +36,7 @@ export class PpTwilioBody {
     return !this.hasText && this.hasPictures;
   }
 
-  private getMediaUrlsFromTwilioBody(twilioBody: TwilioBody): string[] {
+  private getMediaUrlsFromTwilioBody(twilioBody: ITwilioBody): string[] {
     const mediaUrls: string[] = [];
     for (const anyKey in twilioBody) {
       if (anyKey.startsWith('MediaUrl')) {

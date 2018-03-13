@@ -1,5 +1,5 @@
 // Types for signup
-export interface SignupAccountRequest {
+export interface ISignupAccountRequest {
   firstName: string;
   lastName: string;
   email: string;
@@ -12,6 +12,6 @@ export interface SignupAccountRequest {
   phone: string;
 }
 
-export interface SignupWithStripeId extends SignupAccountRequest {
+export interface ISignupWithStripeId extends ISignupAccountRequest {
   stripeCustId: string;
 }

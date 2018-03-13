@@ -1,14 +1,14 @@
 // Types for printing
 
-export interface PwintyOrder {
+export interface IPwintyOrder {
   id: string;
 }
 
-export interface PwintyPhoto {
+export interface IPwintyPhoto {
   id: string;
 }
 
-export interface PwintyPhotoOrder {
+export interface IPwintyPhotoOrder {
   type: string;
   attributes: {
     finish: string;
@@ -18,9 +18,9 @@ export interface PwintyPhotoOrder {
   sizing: string;
 }
 
-export interface PwintyOrderStatus {
+export interface IPwintyOrderStatus {
   id: string;
   isValid: boolean;
-  photos: PwintyPhoto[];
+  photos: IPwintyPhoto[];
   generalErrors: string[];
 }

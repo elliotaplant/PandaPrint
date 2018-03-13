@@ -1,6 +1,6 @@
-import { Address, Order, OrderStatus } from '../db';
+import { IAddress, IOrder, OrderStatus } from '../db';
 import { ErrorActuator } from '../error';
-import { PwintyOrder, PwintyOrderStatus, PwintyPhoto, PwintyPhotoOrder } from './types';
+import { IPwintyOrder, IPwintyOrderStatus, IPwintyPhoto, IPwintyPhotoOrder } from './types';
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
 
@@ -17,7 +17,7 @@ export class PwintyClient {
     this.pwinty = pwintyInit(this.merchantId, this.apiKey, `https://${this.env}.pwinty.com/v2.5/`);
   }
 
-  public sendOrderToPwinty(order: Order, address: Address, name: string) {
+  public sendOrderToPwinty(order: IOrder, address: IAddress, name: string) {
     // First verify that the order is ready to print
     return new Promise((resolve, reject) => {
       // If order not paid for, throw error
@@ -36,33 +36,33 @@ export class PwintyClient {
       .then(() => this.createPwintyOrder({ ...address, recipientName: name }))
       // Set the pwinty order id on the PpOrder
       .then((pwintyOrder) => ({ ...order, pwintyOrderId: pwintyOrder.id }))
-      // Add photos from Order to PwintyOrder
+      // Add photos from IOrder to IPwintyOrder
       .then((unsubmittedOrder) => this.addPhotosToPwintyOrder(unsubmittedOrder))
       // Submit order
       .then((unsubmittedOrder) => this.submitPwintyOrder(unsubmittedOrder));
   }
 
-  public getPwintyOrderStatus(orderId: string): Promise<PwintyOrderStatus> {
+  public getPwintyOrderStatus(orderId: string): Promise<IPwintyOrderStatus> {
     return new Promise((resolve, reject) => {
-      this.pwinty.getOrderStatus(orderId, (err: any, status: PwintyOrderStatus) => err ? reject(err) : resolve(status));
+      this.pwinty.getOrderStatus(orderId, (err: any, status: IPwintyOrderStatus) => err ? reject(err) : resolve(status));
     });
   }
 
   /** Should be private members */
 
   // Visible for testing
-  public createPwintyOrder(address: Address): Promise<PwintyOrder> {
+  public createPwintyOrder(address: IAddress): Promise<IPwintyOrder> {
     return new Promise((resolve, reject) => {
       this.pwinty.createOrder(address, (err: any, createdOrder: any) => err ? reject(err) : resolve(createdOrder));
     });
   }
 
   // Visible for testing
-  public addPhotosToPwintyOrder(order: Order): Promise<Order> {
+  public addPhotosToPwintyOrder(order: IOrder): Promise<IOrder> {
     if (!order.pwintyOrderId) {
       throw new Error(`No pwinty order to add photos to`);
     }
-    const photos: PwintyPhotoOrder[] = order.pictureUrls.map((url) => ({
+    const photos: IPwintyPhotoOrder[] = order.pictureUrls.map((url) => ({
       // make this depend on the size of the photo, and be 4x4 if square photo
       type: '4x6',
 
@@ -82,7 +82,7 @@ export class PwintyClient {
 
     const photoAddPromises = photos.map((pwintyPhotoOrder) => {
       return new Promise((resolve, reject) => this.pwinty.addPhotoToOrder(order.pwintyOrderId, pwintyPhotoOrder,
-        (err: any, photo: PwintyPhoto) => err ? reject(err) : resolve(photo)));
+        (err: any, photo: IPwintyPhoto) => err ? reject(err) : resolve(photo)));
      });
 
     return Promise.all(photoAddPromises)
@@ -94,7 +94,7 @@ export class PwintyClient {
   }
 
   // Visible for testing
-  public submitPwintyOrder(order: Order): Promise<Order> {
+  public submitPwintyOrder(order: IOrder): Promise<IOrder> {
     return new Promise((resolve, reject) => {
       this.pwinty.updateOrderStatus({
         id: order.pwintyOrderId,

@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import { BillingActuator } from '../billing';
-import { DbClient, PpAccount } from '../db';
+import { DbClient, IPpAccount } from '../db';
 import { PwintyClient } from '../printing';
 import { Utils } from '../utils';
 import { PpTwilioBody } from './pp-twilio-body.class';
-import { TwilioBody } from './types';
+import { ITwilioBody } from './types';
 
 /**
   Actuator for recieved messages
@@ -20,7 +20,7 @@ export class MessageActuator {
   constructor(private dbClient: DbClient, private pwintyClient: PwintyClient, private billingActuator: BillingActuator) { }
 
   // Handle an incoming message and return the response to send to the user
-  public handleMessage(twilioBody: TwilioBody): Promise<string> {
+  public handleMessage(twilioBody: ITwilioBody): Promise<string> {
     // convert twilioBody into something usable
     const ppTwilioBody = new PpTwilioBody(twilioBody);
 
@@ -42,7 +42,7 @@ export class MessageActuator {
   }
 
   // private methods
-  private handleMsgForExistingAccount(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
+  private handleMsgForExistingAccount(twilioBody: PpTwilioBody, account: IPpAccount): Promise<string> {
     // First, save any pictures to the user's current order
     return this.dbClient.addPhotosToUsersCurrentOrder(twilioBody.mediaUrls, account.phone)
       .then((account) => {
@@ -75,7 +75,7 @@ export class MessageActuator {
       });
   }
 
-  private handleSendMessage(twilioBody: PpTwilioBody, account: PpAccount): Promise<string> {
+  private handleSendMessage(twilioBody: PpTwilioBody, account: IPpAccount): Promise<string> {
     if (this.isFullAccount(account)) {
       // Use pwinty client to create and send order
       this.pwintyClient.sendOrderToPwinty(account.currentOrder, account.address,
@@ -100,12 +100,12 @@ export class MessageActuator {
     }
   }
 
-  public handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
+  public handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
     // TODO: Add price
     return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`;
   }
 
-  public handlePricingMessage(account: PpAccount) {
+  public handlePricingMessage(account: IPpAccount) {
     // TODO: Add billing utils to determine order price
     const numPicsInOrder = account.currentOrder.pictureUrls.length;
     return `You have ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`;
@@ -115,12 +115,12 @@ export class MessageActuator {
     return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
   }
 
-  public savedAndSendingMessage(twilioBody: PpTwilioBody, account: PpAccount): string {
+  public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
     // TODO: Add price to response
     return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.address1}.`;
   }
 
-  public sendingMessage(account: PpAccount): string {
+  public sendingMessage(account: IPpAccount): string {
     // TODO: Add price to response
     return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.address1}.`;
   }
@@ -134,7 +134,7 @@ export class MessageActuator {
     return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
   }
 
-  private isFullAccount(account: PpAccount) {
+  private isFullAccount(account: IPpAccount) {
     return !!(account.phone &&
       account.address &&
       account.stripeCustId &&

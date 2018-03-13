@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as Stripe from 'stripe';
-import { EntryPpAccount, Order, OrderStatus } from '../db';
+import { IEntryPpAccount, IOrder, OrderStatus } from '../db';
 import { StripeClient } from './stripe.client';
 
 /**
-  Tests for stripe client
+ * Tests for stripe client
  */
 
 // Spec file for BillingActuator

@@ -1,5 +1,5 @@
 import { TwilioClient } from './twilio.client';
-import { TwilioBody } from './types';
+import { ITwilioBody } from './types';
 
 /**
   A client to interact with the twilio API
@@ -14,7 +14,7 @@ export class MockTwilioClient extends TwilioClient {
     throw new Error('Attempting to send message with mock twilio client');
   }
 
-  public static justTextExampleBody(): TwilioBody {
+  public static justTextExampleBody(): ITwilioBody {
     return {
       ToCountry: 'US',
       ToState: 'CA',
@@ -38,7 +38,7 @@ export class MockTwilioClient extends TwilioClient {
     };
   }
 
-  public static multiImageNoTextExampleBody(): TwilioBody {
+  public static multiImageNoTextExampleBody(): ITwilioBody {
     return {
       MediaContentType1: 'image/jpeg',
       ToCountry: 'US',
@@ -66,7 +66,7 @@ export class MockTwilioClient extends TwilioClient {
     };
   }
 
-  public static singleImagewithTextExampleBody(): TwilioBody {
+  public static singleImagewithTextExampleBody(): ITwilioBody {
     return {
       ToCountry: 'US',
       MediaContentType0: 'image/jpeg',

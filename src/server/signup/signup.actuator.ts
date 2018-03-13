@@ -1,8 +1,8 @@
 import { StripeClient } from '../billing';
-import { DbClient, EntryPpAccount, PpAccount } from '../db';
+import { DbClient, IEntryPpAccount, IPpAccount } from '../db';
 import { ErrorActuator } from '../error';
 import { MessageActuator } from '../messages';
-import { SignupAccountRequest, SignupWithStripeId } from './types';
+import { ISignupAccountRequest, ISignupWithStripeId } from './types';
 /**
   Actuator for signups from the front end
  */
@@ -11,7 +11,7 @@ export class SignupActuator {
   constructor(private dbClient: DbClient, private stripeClient: StripeClient) { }
 
   // This can be better
-  public handleSignup(signupAccountReq: SignupAccountRequest): Promise<string> {
+  public handleSignup(signupAccountReq: ISignupAccountRequest): Promise<string> {
     // First register the customer with a stripe account
     return this.stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken)
      // Attach the stripe customer id to the request
@@ -32,12 +32,12 @@ export class SignupActuator {
   }
 
   // private methods
-  private signupWelcomeMessage(account: PpAccount): string {
+  private signupWelcomeMessage(account: IPpAccount): string {
     return `Welcome to Panda Print ${account.firstName}! Try sending us a picture to print.`;
   }
 
   // TODO: Get a front end for signups
-  private signupRequestToEntryPpAccount(signupAccountReq: SignupAccountRequest): EntryPpAccount {
+  private signupRequestToEntryPpAccount(signupAccountReq: ISignupAccountRequest): IEntryPpAccount {
     return {
       firstName: signupAccountReq.firstName,
       lastName: signupAccountReq.lastName,
@@ -54,7 +54,7 @@ export class SignupActuator {
     };
   }
 
-  private accountReqSanitizePhone(signupWithStripeId: SignupWithStripeId): SignupWithStripeId {
+  private accountReqSanitizePhone(signupWithStripeId: ISignupWithStripeId): ISignupWithStripeId {
     return { ...signupWithStripeId, phone: this.sanitizePhone(signupWithStripeId.phone) };
   }
 
