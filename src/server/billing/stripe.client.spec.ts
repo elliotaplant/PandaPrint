@@ -15,21 +15,42 @@ describe('Stripe Client', function() {
   this.timeout(5000);
 
   let stripeClient: StripeClient;
+  let exampleCustomerEmail: string;
+  let exampleCardToken: string;
 
   beforeEach(() => {
     stripeClient = new StripeClient();
     stripeClient.init();
+
+    exampleCustomerEmail = 'kim@possible.com';
+    exampleCardToken = 'tok_visa';
   });
 
   describe('Create customer', () => {
-    const exampleCustomerEmail = 'kim@possible.com';
-    const exampleCardToken = 'tok_visa';
-
     it('should create a customer with an email', () => {
       return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
         .then(stripeCustomer => {
           expect(stripeCustomer.id).to.not.be.empty;
           expect(stripeCustomer.email).to.equal(exampleCustomerEmail);
+        });
+    });
+  });
+
+  describe.only('Charge customer', () => {
+    let createdCustomerId: string;
+    let exampleChargeAmount: number;
+
+    beforeEach(() => {
+      exampleChargeAmount = 420; // blaze up
+      return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
+        .then(createdCustomer => createdCustomerId = createdCustomer.id);
+    });
+
+    it('should create a customer with an email', () => {
+      return stripeClient.chargeCustomer(createdCustomerId, exampleChargeAmount)
+        .then(charge => {
+          expect(charge.customer).to.equal(createdCustomerId);
+          expect(charge.amount).to.equal(exampleChargeAmount);
         });
     });
   });

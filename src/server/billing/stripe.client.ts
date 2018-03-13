@@ -12,15 +12,15 @@ export class StripeClient {
     this.stripe = new Stripe(stripeKeys.secretKey);
   }
 
+  public createCustomer(email: string, stripeToken: string): Promise<Stripe.customers.ICustomer> {
+    return this.stripe.customers.create({ email, source: stripeToken })
+  }
+
   public chargeCustomer(stripeCustomerId: string, amount: number): Promise<Stripe.charges.ICharge> {
     return this.stripe.charges.create({
       amount,
       currency: 'usd',
       customer: stripeCustomerId
     });
-  }
-
-  public createCustomer(email: string, stripeToken: string): Promise<Stripe.customers.ICustomer> {
-    return this.stripe.customers.create({ email, source: stripeToken })
   }
 }
