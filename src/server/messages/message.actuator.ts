@@ -48,9 +48,12 @@ export class MessageActuator {
   }
 
   public handlePricingMessage(account: IPpAccount) {
-    // TODO: Add billing utils to determine order price
+    const preamble = `Our prints costs $0.49 per photo and $3.49 for shipping.`;
     const numPicsInOrder = account.currentOrder.pictureUrls.length;
-    return `You have ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which would cost $5 to print.`;
+    const currentOrderCost = this.billingActuator.calculatePriceForOrder(account.currentOrder);
+    const currentOrder = `You have ${numPicsInOrder || 'no'} picture${Utils.sIfPlural(numPicsInOrder)} in your order, which will cost $${currentOrderCost} to print.`;
+
+    return `${preamble} ${currentOrder}`;
   }
 
   public unknownMessageResponse() {
@@ -58,13 +61,17 @@ export class MessageActuator {
   }
 
   public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
-    // TODO: Add price to response
-    return `Thanks ${account.firstName}! We saved the new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print your order and send it to ${account.address.address1}.`;
+    const orderPrice = this.billingActuator.calculatePriceForOrder(account.currentOrder);
+    const orderSize = account.currentOrder.pictureUrls.length;
+
+    return `Thanks ${account.firstName}! We saved your new picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}. We'll print the ${orderSize} photos in your order, send it to ${account.address.address1}, and charge your card ${orderPrice}`;
   }
 
   public sendingMessage(account: IPpAccount): string {
-    // TODO: Add price to response
-    return `Thanks ${account.firstName}! We'll print your order and send it to ${account.address.address1}.`;
+    const orderPrice = this.billingActuator.calculatePriceForOrder(account.currentOrder);
+    const orderSize = account.currentOrder.pictureUrls.length;
+
+    return `Thanks ${account.firstName}! We'll print the ${orderSize} photos in your order, send it to ${account.address.address1}, and charge your card ${orderPrice}`;
   }
 
   public savedAndUnknownAddressMessage(twilioBody: PpTwilioBody): string {
