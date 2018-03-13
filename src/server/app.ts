@@ -42,7 +42,7 @@ app.post('/sms', (req: any, res: any) => {
 app.post('/signup', (req: any, res: any) => {
   // Save user to DB
   signupActuator.handleSignup(req)
-    .then((replyMessage) => twilioClient.sendMessageToNumber(replyMessage, req.phone))
+    .then((replyMessage) => twilioClient.sendMessageToPhone(replyMessage, req.phone))
     .then(() => res.set('200'))
     .catch(() => res.send('500')); // send error
 });

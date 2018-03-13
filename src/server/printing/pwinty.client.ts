@@ -84,7 +84,7 @@ export class PwintyClient {
     const photoAddPromises = photos.map((pwintyPhotoOrder) => {
       return new Promise((resolve, reject) => this.pwinty.addPhotoToOrder(order.pwintyOrderId, pwintyPhotoOrder,
         (err: any, photo: IPwintyPhoto) => err ? reject(err) : resolve(photo)));
-     });
+    });
 
     return Promise.all(photoAddPromises)
       .then(() => order)
@@ -102,9 +102,9 @@ export class PwintyClient {
         status: 'Submitted',
       }, (err: any, submited: any) => err ? reject(err) : resolve(submited));
     })
-    .then(() => {
-      order.status = OrderStatus.Sending;
-      return order;
-    });
+      .then(() => {
+        order.status = OrderStatus.Sending;
+        return order;
+      });
   }
 }
