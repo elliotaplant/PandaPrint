@@ -36,7 +36,7 @@ describe('Stripe Client', function() {
     });
   });
 
-  describe.only('Charge customer', () => {
+  describe('Charge customer', () => {
     let createdCustomerId: string;
     let exampleChargeAmount: number;
 

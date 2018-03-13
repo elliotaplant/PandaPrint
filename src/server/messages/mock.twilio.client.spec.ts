@@ -7,10 +7,6 @@ import { TwilioBody } from './types';
 
 export class MockTwilioClient extends TwilioClient {
 
-  constructor() {
-    super(null, null);
-  }
-
   // Overrides client init with no-op
   public init() { }
 
