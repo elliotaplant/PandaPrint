@@ -10,7 +10,10 @@ import { Order, OrderStatus, EntryPpAccount } from '../db';
 
 
 // Spec file for BillingActuator
-describe('Stripe Client', () => {
+describe('Stripe Client', function() {
+  // Hitting test stripe api, so time may be longer than 2000ms
+  this.timeout(5000);
+
   let stripeClient: StripeClient;
 
   beforeEach(() => {
@@ -22,14 +25,12 @@ describe('Stripe Client', () => {
     const exampleCustomerEmail = 'kim@possible.com';
     const exampleCardToken = 'tok_visa';
 
-    it.only('should create a customer with an email', (done) => {
-      stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
+    it('should create a customer with an email', () => {
+      return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
         .then(stripeCustomer => {
           expect(stripeCustomer.id).to.not.be.empty;
           expect(stripeCustomer.email).to.equal(exampleCustomerEmail);
-        })
-        .then(() => done())
-        .catch(done)
+        });
     });
   });
 });
