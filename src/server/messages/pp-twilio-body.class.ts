@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
-import { TwilioBody } from './types';
 import { Utils } from '../utils';
+import { TwilioBody } from './types';
 
 /**
   Class to make interacting with twilio messages easier
   */
 export class PpTwilioBody {
-  text: string;
-  mediaUrls: string[];
-  phone: string;
+  public text: string;
+  public mediaUrls: string[];
+  public phone: string;
 
   constructor(twilioBody: TwilioBody) {
     this.text = twilioBody.Body;
@@ -40,7 +40,7 @@ export class PpTwilioBody {
     const mediaUrls: string[] = [];
     for (const anyKey in twilioBody) {
       if (anyKey.startsWith('MediaUrl')) {
-        mediaUrls.push(Utils.safeGet(() => (<any>twilioBody)[anyKey], null));
+        mediaUrls.push(Utils.safeGet(() => (twilioBody as any)[anyKey], null));
       }
     }
 

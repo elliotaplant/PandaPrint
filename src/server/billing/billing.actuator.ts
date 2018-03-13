@@ -1,4 +1,4 @@
-import { Order, EntryPpAccount } from '../db';
+import { EntryPpAccount, Order } from '../db';
 import { StripeClient } from './stripe.client';
 /**
   Actuator for billing

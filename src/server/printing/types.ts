@@ -20,7 +20,7 @@ export interface PwintyPhotoOrder {
 
 export interface PwintyOrderStatus {
   id: string;
-  isValid: boolean,
+  isValid: boolean;
   photos: PwintyPhoto[];
   generalErrors: string[];
 }

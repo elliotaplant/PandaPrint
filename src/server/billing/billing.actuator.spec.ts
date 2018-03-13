@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
+import { EntryPpAccount, Order, OrderStatus } from '../db';
 import { BillingActuator } from './billing.actuator';
 import { MockStripeClient } from './mock.stripe.client.spec';
-import { Order, OrderStatus, EntryPpAccount } from '../db';
 
 // Spec file for BillingActuator
 describe('Billing Actuator', () => {
@@ -80,12 +80,12 @@ describe('Billing Actuator', () => {
     describe('Invalid charges', () => {
       afterEach(() => {
         expect(stripeChargeStub.notCalled).to.be.true;
-      })
+      });
 
       it('should throw an error if trying to charge customer for empty order', (done) => {
         account.stripeCustId = 'id123';
         try {
-          billingActuator.chargeCustomerForOrder(account, order)
+          billingActuator.chargeCustomerForOrder(account, order);
           done(new Error('Expected customer charge to fail for empty order'));
         } catch (error) {
           expect(error.message.toLowerCase()).to.contain('empty order');
@@ -96,7 +96,7 @@ describe('Billing Actuator', () => {
       it('should throw an error if trying to charge customer without a stripe customer id', (done) => {
         order.pictureUrls = ['1'];
         try {
-          billingActuator.chargeCustomerForOrder(account, order)
+          billingActuator.chargeCustomerForOrder(account, order);
           done(new Error('Expected customer charge to fail for customer with no stripe customer id'));
         } catch (error) {
           expect(error.message.toLowerCase()).to.contain('stripe customer id');

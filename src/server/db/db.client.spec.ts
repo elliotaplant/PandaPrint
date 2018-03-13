@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Address, Order, OrderStatus, EntryPpAccount, PpAccount } from './types';
 import { DbClient } from './db.client';
+import { Address, EntryPpAccount, Order, OrderStatus, PpAccount } from './types';
 
 /**
   A client for interacting with the database
@@ -32,7 +32,7 @@ describe('Db Client', () => {
     it('should create accounts with only phone number', (done) => {
       const mikeJonesPhone = '+12813308004';
       dbClient.createAccountFromPhone(mikeJonesPhone)
-        .then(createdAccount => {
+        .then((createdAccount) => {
           expect(createdAccount.phone).to.equal(mikeJonesPhone);
           expect(createdAccount.currentOrder.pictureUrls).to.be.empty;
         })
@@ -58,11 +58,11 @@ describe('Db Client', () => {
           pictureUrls: [],
           status: OrderStatus.Open,
         },
-        previousOrders: []
+        previousOrders: [],
       };
 
       dbClient.createAccount(soljaBoi)
-        .then(createdAccount => {
+        .then((createdAccount) => {
           expect(createdAccount.phone).to.equal(soljaBoi.phone);
           expect(createdAccount.email).to.equal(soljaBoi.email);
           expect(createdAccount.address.address1).to.equal(soljaStreet);
@@ -91,12 +91,12 @@ describe('Db Client', () => {
       };
 
       dbClient.createAccountFromPhone(mikeJonesPhone)
-        .then(createdAccount => {
+        .then((createdAccount) => {
           expect(createdAccount.phone).to.equal(mikeJonesPhone);
           expect(createdAccount.firstName).to.be.undefined;
           return dbClient.updateAccount(mikeJonesInfo);
         })
-        .then(updatedAccount => {
+        .then((updatedAccount) => {
           expect(updatedAccount.phone).to.equal(mikeJonesPhone);
           expect(updatedAccount.firstName).to.equal(mikeJonesInfo.firstName);
           expect(updatedAccount.address.address1).to.equal(mikeJonesInfo.address.address1);

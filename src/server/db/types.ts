@@ -1,4 +1,4 @@
-import { Document } from 'mongoose'
+import { Document } from 'mongoose';
 // A reflection of DB types
 
 // User account info
@@ -28,7 +28,7 @@ export interface Order {
 export enum OrderStatus {
   Open,
   Sending,
-  Closed
+  Closed,
 }
 
 /**

@@ -1,5 +1,5 @@
-import { Address, Order, EntryPpAccount, PpAccount } from './types';
 import { DbClient } from './db.client';
+import { Address, EntryPpAccount, Order, PpAccount } from './types';
 
 /**
   A mock to in memory db to represent the DbClient
@@ -11,26 +11,26 @@ export class MockDbClient extends DbClient {
 
   // Overrides
   public loadAccountByPhone(phone: string): Promise<PpAccount> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const foundAccount = this.accounts.get(phone);
       resolve(foundAccount);
     });
   }
 
   public createAccount(newAccount: EntryPpAccount): Promise<PpAccount> {
-    return new Promise(resolve => {
-      this.accounts.set(newAccount.phone, <any>newAccount);
+    return new Promise((resolve) => {
+      this.accounts.set(newAccount.phone, newAccount as any);
       const foundAccount = this.accounts.get(newAccount.phone);
       resolve(foundAccount);
     });
   }
 
   public createAccountFromPhone(phone: string): Promise<PpAccount> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const newAccount: any = {
         phone,
         currentOrder: { pictureUrls: [] },
-        previousOrders: []
+        previousOrders: [],
       };
       this.accounts.set(newAccount.phone, newAccount);
       const foundAccount = this.accounts.get(newAccount.phone);
@@ -39,8 +39,8 @@ export class MockDbClient extends DbClient {
   }
 
   public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
-    return new Promise(resolve => {
-      this.accounts.set(updatedAccount.phone, <any>updatedAccount);
+    return new Promise((resolve) => {
+      this.accounts.set(updatedAccount.phone, updatedAccount as any);
       const foundAccount = this.accounts.get(updatedAccount.phone);
       resolve(foundAccount);
     });
@@ -48,7 +48,7 @@ export class MockDbClient extends DbClient {
 
   public addPhotosToUsersCurrentOrder(photos: string[], phone: string) {
     return this.loadAccountByPhone(phone)
-      .then(account => {
+      .then((account) => {
         const currentOrder = account.currentOrder;
         currentOrder.pictureUrls = currentOrder.pictureUrls.concat(photos);
         return account;

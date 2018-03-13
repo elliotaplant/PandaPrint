@@ -1,13 +1,12 @@
-import * as Stripe from 'stripe';
-import * as sinon from 'sinon';
 import { expect } from 'chai';
+import * as sinon from 'sinon';
+import * as Stripe from 'stripe';
+import { EntryPpAccount, Order, OrderStatus } from '../db';
 import { StripeClient } from './stripe.client';
-import { Order, OrderStatus, EntryPpAccount } from '../db';
 
 /**
   Tests for stripe client
  */
-
 
 // Spec file for BillingActuator
 describe('Stripe Client', function() {
@@ -29,7 +28,7 @@ describe('Stripe Client', function() {
   describe('Create customer', () => {
     it('should create a customer with an email', () => {
       return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
-        .then(stripeCustomer => {
+        .then((stripeCustomer) => {
           expect(stripeCustomer.id).to.not.be.empty;
           expect(stripeCustomer.email).to.equal(exampleCustomerEmail);
         });
@@ -43,12 +42,12 @@ describe('Stripe Client', function() {
     beforeEach(() => {
       exampleChargeAmount = 420; // blaze up
       return stripeClient.createCustomer(exampleCustomerEmail, exampleCardToken)
-        .then(createdCustomer => createdCustomerId = createdCustomer.id);
+        .then((createdCustomer) => createdCustomerId = createdCustomer.id);
     });
 
     it('should create a customer with an email', () => {
       return stripeClient.chargeCustomer(createdCustomerId, exampleChargeAmount)
-        .then(charge => {
+        .then((charge) => {
           expect(charge.customer).to.equal(createdCustomerId);
           expect(charge.amount).to.equal(exampleChargeAmount);
         });

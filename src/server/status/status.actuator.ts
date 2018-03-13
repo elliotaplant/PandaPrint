@@ -13,7 +13,7 @@ export class StatusActuator {
         <h1>Hi Elliot! Found you at ${new Date().toString()}</h1>
         <h3>The server appears to be alive</h3>
         <pre>${JSON.stringify({ object: 'Goes here' }, null, 2)}</pre>
-      </body>`
-    )
+      </body>`,
+    );
   }
 }

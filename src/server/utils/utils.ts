@@ -1,11 +1,11 @@
-import { ApiKey } from './types'
+import { ApiKey } from './types';
 const keys = require('../../../keys.json');
 // Utility methods that aren't in lodash
 
 export class Utils {
 
   // Safe getter utility for uncertain property lookups
-  static safeGet<T>(getFn: () => T, defaultValue: T): T {
+  public static safeGet<T>(getFn: () => T, defaultValue: T): T {
     let foundValue;
     try {
       foundValue = getFn();
@@ -20,12 +20,12 @@ export class Utils {
   }
 
   // Utility to return the 's' character if the number is not === 1
-  static sIfPlural(ammount: number): string {
+  public static sIfPlural(ammount: number): string {
     return ammount === 1 ? '' : 's';
   }
 
   // Get key from environment or keys file
-  static getKey(key: ApiKey): string {
+  public static getKey(key: ApiKey): string {
     const prodKey = Utils.safeGet(() => process.env[key], null);
 
     if (!prodKey) {

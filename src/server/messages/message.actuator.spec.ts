@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { BillingActuator } from '../billing';
 import { MockBillingActuator } from '../billing/index.spec';
-import { MessageActuator } from './message.actuator';
-import { TwilioBody } from './types';
 import { Order, PpAccount } from '../db';
 import { MockDbClient } from '../db/index.spec';
 import { PwintyClient } from '../printing';
+import { MessageActuator } from './message.actuator';
 import { MockTwilioClient } from './mock.twilio.client.spec';
+import { TwilioBody } from './types';
 
 // Spec file for BillingActuator
 describe('Message Actuator', () => {
@@ -38,8 +38,8 @@ describe('Message Actuator', () => {
 
       it('should be confused about text only messages', (done) => {
         messageActuator.handleMessage(textOnlyMessage)
-          .then(confusedResponse => {
-            expect(confusedResponse).to.equal(messageActuator.unknownMessageResponse())
+          .then((confusedResponse) => {
+            expect(confusedResponse).to.equal(messageActuator.unknownMessageResponse());
             done();
           })
           .catch(done);
@@ -49,8 +49,8 @@ describe('Message Actuator', () => {
     describe('Unknown Account', () => {
       it('should invite user to try for text only message', (done) => {
         messageActuator.handleMessage(textOnlyMessage)
-          .then(inviteResponse => {
-            expect(inviteResponse).to.equal(messageActuator.welcomeNoPictures)
+          .then((inviteResponse) => {
+            expect(inviteResponse).to.equal(messageActuator.welcomeNoPictures);
             done();
           })
           .catch(done);
@@ -59,11 +59,11 @@ describe('Message Actuator', () => {
       it('should invite user and notify save for image only message', (done) => {
         const imagesOnlyMessage = MockTwilioClient.multiImageNoTextExampleBody();
         messageActuator.handleMessage(imagesOnlyMessage)
-          .then(inviteResponse => {
+          .then((inviteResponse) => {
             expect(inviteResponse).to.contain(`We'll save them`);
           })
           .then(() => mockDbClient.loadAccountByPhone(imagesOnlyMessage.From))
-          .then(loadedAccount => {
+          .then((loadedAccount) => {
             expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
             expect(loadedAccount.currentOrder.pictureUrls)
               .to.contain(imagesOnlyMessage.MediaUrl0)
@@ -77,11 +77,11 @@ describe('Message Actuator', () => {
       it('should invite user and notify save for image and text message', (done) => {
         const imagesOnlyMessage = MockTwilioClient.singleImagewithTextExampleBody();
         messageActuator.handleMessage(imagesOnlyMessage)
-          .then(inviteResponse => {
+          .then((inviteResponse) => {
             expect(inviteResponse).to.contain(`We'll save it`);
           })
           .then(() => mockDbClient.loadAccountByPhone(imagesOnlyMessage.From))
-          .then(loadedAccount => {
+          .then((loadedAccount) => {
             expect(loadedAccount.phone).to.equal(imagesOnlyMessage.From);
             expect(loadedAccount.currentOrder.pictureUrls)
               .to.contain(imagesOnlyMessage.MediaUrl0)

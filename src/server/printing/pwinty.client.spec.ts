@@ -1,9 +1,9 @@
 import { expect } from 'chai';
+import { Address, Order, OrderStatus } from '../db';
 import { ErrorActuator } from '../error';
-import { OrderStatus, Order, Address } from '../db';
-import { PwintyOrder, PwintyPhotoOrder, PwintyPhoto } from './types';
-import { PwintyClient } from './pwinty.client';
 import { Utils } from '../utils';
+import { PwintyClient } from './pwinty.client';
+import { PwintyOrder, PwintyPhoto, PwintyPhotoOrder } from './types';
 
 /**
   Tests for the PwintyClient
@@ -31,22 +31,22 @@ describe('Pwinty Client', function() {
     photoOrder = {
       pictureUrls: ['https://goo.gl/vUZvpc', 'https://goo.gl/zZY3hr'],
       status: OrderStatus.Open,
-    }
+    };
 
     const merchantId = Utils.getKey('PWINTY_MERCHANT_ID');
     const apiKey = Utils.getKey('PWINTY_API_KEY');
     pwintyClient = new PwintyClient(merchantId, apiKey, 'sandbox');
-    pwintyClient.init()
+    pwintyClient.init();
   });
 
   describe('Creating orders', () => {
     it('should create an order with a pwinty address', (done) => {
       pwintyClient.createPwintyOrder(pinappleUnderTheSea)
-        .then(createdOrder => {
+        .then((createdOrder) => {
           expect(createdOrder.id).to.have.length;
-          return pwintyClient.getPwintyOrderStatus(createdOrder.id)
+          return pwintyClient.getPwintyOrderStatus(createdOrder.id);
         })
-        .then(orderStatus => {
+        .then((orderStatus) => {
           expect(orderStatus.isValid).to.be.false;
           expect(orderStatus.photos).to.be.empty;
           expect(orderStatus.generalErrors).to.contain('NoItemsInOrder');
@@ -60,15 +60,15 @@ describe('Pwinty Client', function() {
     // Ignored because pwinty sandbox api is flaky
     xit('should add photos to an order', (done) => {
       pwintyClient.createPwintyOrder(pinappleUnderTheSea)
-        .then(pwintyOrder => (<Order>{ ...photoOrder, pwintyOrderId: pwintyOrder.id }))
-        .then(createdOrder => pwintyClient.addPhotosToPwintyOrder(createdOrder) )
-        .then(orderWithPhotos => {
+        .then((pwintyOrder) => ({ ...photoOrder, pwintyOrderId: pwintyOrder.id } as Order))
+        .then((createdOrder) => pwintyClient.addPhotosToPwintyOrder(createdOrder) )
+        .then((orderWithPhotos) => {
           // Adding photos to order should return the original order and leave the order open
           expect(orderWithPhotos.status).to.equal(OrderStatus.Open);
           return orderWithPhotos;
         })
-        .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
-        .then(orderStatus => {
+        .then((createdOrder) => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
+        .then((orderStatus) => {
           expect(orderStatus.isValid).to.be.true;
           expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
           done();
@@ -85,8 +85,8 @@ describe('Pwinty Client', function() {
       photoOrder.paymentReceipt = '123 Stripe Payment ID';
 
       pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
-        .then(createdOrder => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
-        .then(orderStatus => {
+        .then((createdOrder) => pwintyClient.getPwintyOrderStatus(createdOrder.pwintyOrderId))
+        .then((orderStatus) => {
           expect(orderStatus.isValid).to.be.true;
           expect(orderStatus.photos).to.have.length(photoOrder.pictureUrls.length);
           done();
@@ -100,7 +100,7 @@ describe('Pwinty Client', function() {
 
       pwintyClient.sendOrderToPwinty(photoOrder, pinappleUnderTheSea, 'Sponebob Squarepants')
         .then(() => done('Expected unpaid order to throw an error'))
-        .catch(error => {
+        .catch((error) => {
           expect(error).to.contain('not been paid');
           done();
         });

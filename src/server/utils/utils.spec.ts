@@ -1,5 +1,5 @@
-import { Utils } from './utils';
 import { expect } from 'chai';
+import { Utils } from './utils';
 
 /** Spec for utils.ts */
 

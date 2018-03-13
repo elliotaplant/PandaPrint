@@ -1,12 +1,12 @@
+import { Address, Order, OrderStatus } from '../db';
 import { ErrorActuator } from '../error';
-import { Order, OrderStatus, Address } from '../db';
-import { PwintyOrder, PwintyPhotoOrder, PwintyPhoto, PwintyOrderStatus } from './types';
-
+import { PwintyOrder, PwintyOrderStatus, PwintyPhoto, PwintyPhotoOrder } from './types';
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
+
 /**
-  A client to interact with the pwinty API
-*/
+ * A client to interact with the pwinty API
+ */
 
 export class PwintyClient {
   private pwinty: any;
@@ -32,19 +32,19 @@ export class PwintyClient {
 
       return resolve();
     })
-      //Create the pwinty order with user's info
+      // Create the pwinty order with user's info
       .then(() => this.createPwintyOrder({ ...address, recipientName: name }))
       // Set the pwinty order id on the PpOrder
-      .then(pwintyOrder => ({ ...order, pwintyOrderId: pwintyOrder.id }))
+      .then((pwintyOrder) => ({ ...order, pwintyOrderId: pwintyOrder.id }))
       // Add photos from Order to PwintyOrder
-      .then(unsubmittedOrder => this.addPhotosToPwintyOrder(unsubmittedOrder))
+      .then((unsubmittedOrder) => this.addPhotosToPwintyOrder(unsubmittedOrder))
       // Submit order
-      .then(unsubmittedOrder => this.submitPwintyOrder(unsubmittedOrder))
+      .then((unsubmittedOrder) => this.submitPwintyOrder(unsubmittedOrder));
   }
 
   public getPwintyOrderStatus(orderId: string): Promise<PwintyOrderStatus> {
     return new Promise((resolve, reject) => {
-      this.pwinty.getOrderStatus(orderId, (err: any, status: PwintyOrderStatus) => err ? reject(err) : resolve(status))
+      this.pwinty.getOrderStatus(orderId, (err: any, status: PwintyOrderStatus) => err ? reject(err) : resolve(status));
     });
   }
 
@@ -62,34 +62,34 @@ export class PwintyClient {
     if (!order.pwintyOrderId) {
       throw new Error(`No pwinty order to add photos to`);
     }
-    const photos: PwintyPhotoOrder[] = order.pictureUrls.map(url => ({
+    const photos: PwintyPhotoOrder[] = order.pictureUrls.map((url) => ({
       // make this depend on the size of the photo, and be 4x4 if square photo
       type: '4x6',
 
       // All photos are glossy
-      attributes: { finish: 'glossy', },
+      attributes: { finish: 'glossy' },
 
       // Link to photo saved by twilio
       url,
 
       // Maybe make this possible to augment?
-      copies: "1",
+      copies: '1',
 
       // Ideally this would be no-crop and we would crop the photo on this server
       // Then we woudl send the cropped photo to the user to see if that is what they want.
-      sizing: "Crop"
+      sizing: 'Crop',
     }));
 
-    const photoAddPromises = photos.map(PwintyPhotoOrder => {
-      return new Promise((resolve, reject) => this.pwinty.addPhotoToOrder(order.pwintyOrderId, PwintyPhotoOrder,
-        (err: any, photo: PwintyPhoto) => err ? reject(err) : resolve(photo)))
+    const photoAddPromises = photos.map((pwintyPhotoOrder) => {
+      return new Promise((resolve, reject) => this.pwinty.addPhotoToOrder(order.pwintyOrderId, pwintyPhotoOrder,
+        (err: any, photo: PwintyPhoto) => err ? reject(err) : resolve(photo)));
      });
 
     return Promise.all(photoAddPromises)
       .then(() => order)
-      .catch(error => {
+      .catch((error) => {
         ErrorActuator.handleError(error, `Failed to add all photos to order ${order.pwintyOrderId}`);
-        throw new Error(`Failed to add all photos to order ${order.pwintyOrderId}`)
+        throw new Error(`Failed to add all photos to order ${order.pwintyOrderId}`);
       });
   }
 

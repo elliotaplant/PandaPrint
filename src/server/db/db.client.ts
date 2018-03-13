@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import { EntryPpAccount, PpAccount } from './types';
 import { Account } from './account.model';
+import { EntryPpAccount, PpAccount } from './types';
 
 /**
   A client for interacting with the database
@@ -12,7 +12,7 @@ export class DbClient {
 
     return mongoose.connect(mongoUri)
       .then(() => console.log(`Mongo connected to ${mongoUri}`))
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to start Mongo');
         console.error(error);
       });
@@ -20,7 +20,7 @@ export class DbClient {
 
   public close(): Promise<void> {
     return mongoose.disconnect()
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to disconnect from Mongo');
         console.error(error);
       });
@@ -40,7 +40,7 @@ export class DbClient {
 
   public updateAccount(updatedAccount: EntryPpAccount): Promise<PpAccount> {
     return Account.findOne({ phone: updatedAccount.phone })
-      .then(found => {
+      .then((found) => {
         found.set(updatedAccount);
         return found.save();
       });
@@ -48,7 +48,7 @@ export class DbClient {
 
   public addPhotosToUsersCurrentOrder(photos: string[], phone: string) {
     return this.loadAccountByPhone(phone)
-      .then(account => {
+      .then((account) => {
         account.currentOrder.pictureUrls.push(...photos);
         return account.save();
       });
