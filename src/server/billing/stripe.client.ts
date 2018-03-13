@@ -12,7 +12,7 @@ export class StripeClient {
     this.stripe = new Stripe(stripeKeys.secretKey);
   }
 
-  public chargeCustomer(stripeCustomerId: string, amount: number) {
+  public chargeCustomer(stripeCustomerId: string, amount: number): Promise<Stripe.charges.ICharge> {
     return this.stripe.charges.create({
       amount,
       currency: 'usd',
