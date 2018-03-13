@@ -36,19 +36,20 @@ export class SignupActuator {
     return `Welcome to Panda Print ${account.firstName}! Try sending us a picture to print.`
   }
 
+  // TODO: Get a front end for signups
   private signupRequestToEntryPpAccount(signupAccountReq: SignupAccountRequest): EntryPpAccount {
     return {
       firstName: signupAccountReq.firstName,
       lastName: signupAccountReq.lastName,
       email: signupAccountReq.email,
       address: {
+        countryCode: 'US',
         address1: signupAccountReq.address1,
-        street2: signupAccountReq.street2,
-        city: signupAccountReq.city,
-        state: signupAccountReq.state,
-        zip: signupAccountReq.zip,
+        address2: signupAccountReq.address2 || null,
+        addressTownOrCity: signupAccountReq.city,
+        stateOrCounty: signupAccountReq.state,
+        postalOrZipCode: signupAccountReq.zip,
       },
-      stripeCustId: signupAccountReq.stripeToken, // this has gotta change
       phone: signupAccountReq.phone, // this needs sanitization
     }
   }

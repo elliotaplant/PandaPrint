@@ -4,7 +4,7 @@ export interface SignupAccountRequest {
   lastName: string;
   email: string;
   address1: string;
-  street2: string;
+  address2: string;
   city: string;
   state: string;
   zip: string;

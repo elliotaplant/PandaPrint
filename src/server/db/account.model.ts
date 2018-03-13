@@ -6,7 +6,7 @@ import { OrderStatus, PpAccount } from './types';
 
 const AddressSchema = new Schema({
   address1: String,
-  street2: String,
+  address2: String,
   city: String,
   state: String,
   zip: String,
