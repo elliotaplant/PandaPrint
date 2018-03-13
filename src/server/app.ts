@@ -3,14 +3,14 @@ import * as express from 'express';
 
 import { BillingActuator, StripeClient } from './billing';
 import { DbClient, IPpAccount } from './db';
+import { ErrorActuator } from './error';
 import { MessageActuator, TwilioClient } from './messages';
 import { PwintyClient } from './printing';
 import { SignupActuator } from './signup';
 import { StatusActuator } from './status';
 
 const dbClient = new DbClient();
-const pwintyClient = new PwintyClient(process.env.PWINTY_MERCHANT_ID, process.env.PWINTY_API_KEY,
-  process.env.PWINTY_ENV);
+const pwintyClient = new PwintyClient(process.env.PWINTY_ENV);
 const twilioClient = new TwilioClient();
 const stripeClient = new StripeClient();
 const statusActuator = new StatusActuator(dbClient);
@@ -35,8 +35,10 @@ app.post('/sms', (req: any, res: any) => {
   // Handle message with message actuator
   messageActuator.handleMessage(req.body)
     .then((replyMessage) => res.send(replyMessage))
-    // TODO: add error actuator to app
-    .catch((e) => res.send('Hmm, something went wrong. We\'ll get back to you soon to fix it'));
+    .catch((e) => {
+      ErrorActuator.handleError(e, `Error handling message: ${JSON.stringify(req.body)}`);
+      res.send('Hmm, something went wrong. We\'ll get back to you soon to fix it');
+    });
 });
 
 app.post('/signup', (req: any, res: any) => {

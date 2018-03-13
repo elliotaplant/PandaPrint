@@ -1,5 +1,6 @@
 import { IAddress, IOrder, OrderStatus } from '../db';
 import { ErrorActuator } from '../error';
+import { Utils } from '../utils';
 import { IPwintyOrder, IPwintyOrderStatus, IPwintyPhoto, IPwintyPhotoOrder } from './types';
 // Must require pwinty since it doesn't have @types
 const pwintyInit = require('pwinty');
@@ -11,10 +12,12 @@ const pwintyInit = require('pwinty');
 export class PwintyClient {
   private pwinty: any;
 
-  constructor(private merchantId: string, private apiKey: string, private env: string = 'sandbox') { }
+  constructor(private env: string = 'sandbox') { }
 
   public init() {
-    this.pwinty = pwintyInit(this.merchantId, this.apiKey, `https://${this.env}.pwinty.com/v2.5/`);
+    const merchantId = Utils.getKey('PWINTY_MERCHANT_ID');
+    const apiKey = Utils.getKey('PWINTY_API_KEY');
+    this.pwinty = pwintyInit(merchantId, apiKey, `https://${this.env}.pwinty.com/v2.5/`);
   }
 
   public sendOrderToPwinty(order: IOrder, address: IAddress, name: string) {
