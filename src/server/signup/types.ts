@@ -1,15 +1,13 @@
+import { IAddress } from '../db';
+
 // Types for signup
 export interface ISignupAccountRequest {
   firstName: string;
   lastName: string;
   email: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-  stripeToken: string;
+  address: IAddress;
   phone: string;
+  stripeToken: string;
 }
 
 export interface ISignupWithStripeId extends ISignupAccountRequest {

@@ -37,6 +37,8 @@ const port = process.env.PORT || 8080;
 // Middleware
 // Tell express to use the body-parser middleware and to not parse extended bodies
 app.use(bodyParser.urlencoded({ extended: false }));
+// Tell express to use the json bodyParser for json data
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   // Send status page
@@ -57,10 +59,13 @@ app.post('/sms', (req: any, res: any) => {
 
 app.post('/signup', (req: any, res: any) => {
   // Save user to DB
-  signupActuator.handleSignup(req)
+  signupActuator.handleSignup(req.body)
     .then((replyMessage) => twilioClient.sendMessageToPhone(replyMessage, req.phone))
-    .then(() => res.set('200'))
-    .catch(() => res.send('500')); // send error
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      ErrorActuator.handleError(error, 'Failed to sign up user');
+      res.status(500).send({ message: 'Failed to sign up user'});
+    });
 });
 
 app.listen(port, () => console.log(`Express server listening on port ${port}`));

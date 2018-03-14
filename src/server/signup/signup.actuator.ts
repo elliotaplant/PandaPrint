@@ -18,17 +18,11 @@ export class SignupActuator {
      .then((customer) => ({ ...signupAccountReq, stripeCustId: customer.id }))
      // Sanitize the phone number in the request
      .then((signupReqWithStripe) => this.accountReqSanitizePhone(signupReqWithStripe))
-     // Convert the signup form into the format used in DB
-     .then((signupReq) => this.signupRequestToEntryPpAccount(signupReq))
      // Create the account in the DB
      .then((entryPpAcctReq) => this.dbClient.createAccount(entryPpAcctReq))
      // Return the welcome message to send to user
-     .then((createdAccount) => this.signupWelcomeMessage(createdAccount))
-     // Handle failures and notify user if possible
-     .catch((error) => {
-       ErrorActuator.handleError(error, 'Failed to sign up user');
-       return `Sorry, but something went wrong when we tried to sign you up. We'll try to fix it on our end and let you know when we resolve it.`;
-     });
+     .then((createdAccount) => this.signupWelcomeMessage(createdAccount));
+     // Handle failures and notify user of reason
   }
 
   // private methods
@@ -36,25 +30,8 @@ export class SignupActuator {
     return `Welcome to Panda Print ${account.firstName}! Try sending us a picture to print.`;
   }
 
-  // TODO: Get a front end for signups
-  private signupRequestToEntryPpAccount(signupAccountReq: ISignupAccountRequest): IEntryPpAccount {
-    return {
-      address: {
-        address1: signupAccountReq.address1,
-        address2: signupAccountReq.address2 || null,
-        addressTownOrCity: signupAccountReq.city,
-        countryCode: 'US',
-        postalOrZipCode: signupAccountReq.zip,
-        stateOrCounty: signupAccountReq.state,
-      },
-      email: signupAccountReq.email,
-      firstName: signupAccountReq.firstName,
-      lastName: signupAccountReq.lastName,
-      phone: signupAccountReq.phone, // this needs sanitization
-    };
-  }
-
   private accountReqSanitizePhone(signupWithStripeId: ISignupWithStripeId): ISignupWithStripeId {
+    console.log('signupWithStripeId', signupWithStripeId);
     return { ...signupWithStripeId, phone: this.sanitizePhone(signupWithStripeId.phone) };
   }
 
