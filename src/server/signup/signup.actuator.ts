@@ -32,7 +32,6 @@ export class SignupActuator {
   }
 
   private accountReqSanitizePhone(signupWithStripeId: ISignupWithStripeId): ISignupWithStripeId {
-    console.log('signupWithStripeId', signupWithStripeId);
     return { ...signupWithStripeId, phone: this.sanitizePhone(signupWithStripeId.phone) };
   }
 
