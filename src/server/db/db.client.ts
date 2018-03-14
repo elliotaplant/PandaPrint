@@ -33,7 +33,6 @@ export class DbClient {
   }
 
   public createAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
-    console.log('creating account', newAccount);
     return Account.create(newAccount);
   }
 

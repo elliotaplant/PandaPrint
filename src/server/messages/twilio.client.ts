@@ -1,4 +1,5 @@
 import * as twilioInit from 'twilio';
+import { RestClient } from 'twilio';
 import { Utils } from '../utils';
 
 /**
@@ -6,7 +7,7 @@ import { Utils } from '../utils';
  */
 
 export class TwilioClient {
-  private twilio: any;
+  private twilio: RestClient;
 
   public init() {
     const accountSid = Utils.getKey('TWILIO_ACCOUNT_SID');
@@ -15,6 +16,15 @@ export class TwilioClient {
   }
 
   public sendMessageToPhone(message: string, phone: string) {
-    // TODO: this
+    return new Promise((resolve, reject) => {
+      this.twilio.messages
+      .create({
+        body: message,
+        from: '+14155793449', // Put this in an env variable
+        to: phone,
+      })
+      .then(resolve)
+      .catch(reject);
+    });
   }
 }

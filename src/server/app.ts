@@ -60,11 +60,11 @@ app.post('/sms', (req: any, res: any) => {
 app.post('/signup', (req: any, res: any) => {
   // Save user to DB
   signupActuator.handleSignup(req.body)
-    .then((replyMessage) => twilioClient.sendMessageToPhone(replyMessage, req.phone))
+    .then(({ message, phone }) => twilioClient.sendMessageToPhone(message, phone))
     .then(() => res.sendStatus(200))
     .catch((error) => {
       ErrorActuator.handleError(error, 'Failed to sign up user');
-      res.status(500).send({ message: 'Failed to sign up user'});
+      res.status(500).send({ message: 'Failed to sign up user' });
     });
 });
 

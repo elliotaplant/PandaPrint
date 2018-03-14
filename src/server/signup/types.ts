@@ -13,3 +13,8 @@ export interface ISignupAccountRequest {
 export interface ISignupWithStripeId extends ISignupAccountRequest {
   stripeCustId: string;
 }
+
+export interface ISignupMessageSend {
+  message: string;
+  phone: string;
+}
