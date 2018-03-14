@@ -9,6 +9,10 @@ import { PwintyClient } from './printing';
 import { SignupActuator } from './signup';
 import { StatusActuator } from './status';
 
+// Source maps for debugging
+require('source-map-support').install();
+process.on('unhandledRejection', console.error);
+
 // Instantiate clients to be injected
 const dbClient = new DbClient();
 const pwintyClient = new PwintyClient();

@@ -7,7 +7,7 @@
     ],
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "outDir": "dist/server",
     "baseUrl": ".",
     "paths": {
