@@ -9,10 +9,19 @@ import { PwintyClient } from './printing';
 import { SignupActuator } from './signup';
 import { StatusActuator } from './status';
 
+// Instantiate clients to be injected
 const dbClient = new DbClient();
 const pwintyClient = new PwintyClient();
 const twilioClient = new TwilioClient();
 const stripeClient = new StripeClient();
+
+// Init necessary client instances
+dbClient.init();
+pwintyClient.init();
+twilioClient.init();
+stripeClient.init();
+
+// Instantiate actuators that use clients
 const statusActuator = new StatusActuator(dbClient);
 const billingActuator = new BillingActuator(stripeClient);
 const messageActuator = new MessageActuator(dbClient, pwintyClient, billingActuator);

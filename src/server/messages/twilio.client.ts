@@ -1,4 +1,4 @@
-import * as twilio from 'twilio';
+import * as twilioInit from 'twilio';
 import { Utils } from '../utils';
 
 /**
@@ -11,7 +11,7 @@ export class TwilioClient {
   public init() {
     const accountSid = Utils.getKey('TWILIO_ACCOUNT_SID');
     const authToken = Utils.getKey('TWILIO_AUTH_TOKEN');
-    this.twilio = new twilio.RestClient(accountSid, authToken);
+    this.twilio = twilioInit(accountSid, authToken);
   }
 
   public sendMessageToPhone(message: string, phone: string) {
