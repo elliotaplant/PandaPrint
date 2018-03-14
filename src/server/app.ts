@@ -19,6 +19,7 @@ const messageActuator = new MessageActuator(dbClient, pwintyClient, billingActua
 const signupActuator = new SignupActuator(dbClient, stripeClient);
 
 const app = express();
+const port = process.env.PORT || 8080;
 
 // Middleware
 // Tell express to use the body-parser middleware and to not parse extended bodies
@@ -49,5 +50,4 @@ app.post('/signup', (req: any, res: any) => {
     .catch(() => res.send('500')); // send error
 });
 
-// tslint:disable-next-line:no-console
-app.listen(3000, () => console.log('Express server listening on port 3000'));
+app.listen(port, () => console.log(`Express server listening on port ${port}`));
