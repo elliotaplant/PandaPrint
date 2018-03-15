@@ -1,6 +1,6 @@
 {
     "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
     "watch": ["src", "tsconfit.*", "package.json"],
-    "exec": "tsc && node --inspect dist/server/app.js || exit 1",
+    "exec": "tsc && node --inspect dist/server/app.js --dev || exit 1",
     "ext": "ts"
 }

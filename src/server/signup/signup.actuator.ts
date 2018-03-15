@@ -1,6 +1,6 @@
 import { StripeClient } from '../billing';
 import { DbClient, IEntryPpAccount, IPpAccount } from '../db';
-import { ErrorActuator } from '../error';
+import { ErrorActuator, ErrorCode } from '../error';
 import { MessageActuator } from '../messages';
 import { ISignupAccountRequest, ISignupMessageSend, ISignupWithStripeId } from './types';
 /**
@@ -11,8 +11,16 @@ export class SignupActuator {
 
   // This can be better
   public handleSignup(signupAccountReq: ISignupAccountRequest): Promise<ISignupMessageSend> {
-    // First register the customer with a stripe account
-    return this.stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken)
+    // Check if customer already exists
+    return this.dbClient.loadAccountByPhone(this.sanitizePhone(signupAccountReq.phone))
+      .then((foundAccount) => {
+        console.log('foundAccount', foundAccount);
+        if (foundAccount) {
+          throw new Error(ErrorCode.AccountWithPhoneAlreadyExists);
+        }
+      })
+      // Register the new customer with a stripe account
+      .then(() => this.stripeClient.createCustomer(signupAccountReq.email, signupAccountReq.stripeToken))
       // Attach the stripe customer id to the request
       .then((customer) => ({ ...signupAccountReq, stripeCustId: customer.id }))
       // Sanitize the phone number in the request

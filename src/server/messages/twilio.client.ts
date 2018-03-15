@@ -16,6 +16,11 @@ export class TwilioClient {
   }
 
   public sendMessageToPhone(message: string, phone: string) {
+    // Don't actually send messages in dev mode
+    if (process.argv.includes('--dev')) {
+      return Promise.resolve({});
+    }
+
     return new Promise((resolve, reject) => {
       this.twilio.messages
       .create({
