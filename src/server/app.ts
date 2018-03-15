@@ -59,13 +59,13 @@ app.post('/sms', (req: any, res: any) => {
 
 app.post('/signup', (req: any, res: any) => {
   // Save user to DB
+  // This should all be in the signup actuator
   signupActuator.handleSignup(req.body)
     .then(({ message, phone }) => twilioClient.sendMessageToPhone(message, phone))
     .then(() => res.sendStatus(200))
     .catch((error) => {
       const defaultMessage = 'Failed to sign up user';
       ErrorActuator.handleError(error, defaultMessage);
-      // res.set('Content-Type', 'application/json');
       res.status(500).send({ message: error.message || defaultMessage });
     });
 });
