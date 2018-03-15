@@ -63,8 +63,10 @@ app.post('/signup', (req: any, res: any) => {
     .then(({ message, phone }) => twilioClient.sendMessageToPhone(message, phone))
     .then(() => res.sendStatus(200))
     .catch((error) => {
-      ErrorActuator.handleError(error, 'Failed to sign up user');
-      res.status(500).send({ message: 'Failed to sign up user' });
+      const defaultMessage = 'Failed to sign up user';
+      ErrorActuator.handleError(error, defaultMessage);
+      // res.set('Content-Type', 'application/json');
+      res.status(500).send({ message: error.message || defaultMessage });
     });
 });
 

@@ -14,7 +14,6 @@ export class SignupActuator {
     // Check if customer already exists
     return this.dbClient.loadAccountByPhone(this.sanitizePhone(signupAccountReq.phone))
       .then((foundAccount) => {
-        console.log('foundAccount', foundAccount);
         if (foundAccount) {
           throw new Error(ErrorCode.AccountWithPhoneAlreadyExists);
         }
