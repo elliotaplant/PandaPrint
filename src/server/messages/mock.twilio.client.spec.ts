@@ -89,7 +89,7 @@ export class MockTwilioClient extends TwilioClient {
   // Overrides client init with no-op
   public init() { }
 
-  public sendMessageToPhone(message: string, phone: string) {
+  public sendMessageToPhone(message: string, phone: string): Promise<{}> {
     throw new Error('Attempting to send message with mock twilio client');
   }
 
