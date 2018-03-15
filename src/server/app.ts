@@ -42,6 +42,7 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   // Send status page
+  // This should be handled by the static page thing
   statusActuator.sendStatusPage(res);
 });
 

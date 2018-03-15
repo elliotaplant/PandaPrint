@@ -43,8 +43,10 @@ export class MessageActuator {
   }
 
   public handlePicturesOnlyMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
-    // TODO: Add price
-    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${account.currentOrder.pictureUrls.length} pictures. If you want us to print them, just write "send it!" and we'll send your order.`;
+    const numPicsInOrder = account.currentOrder.pictureUrls.length;
+    const currentOrderCost = this.billingActuator.calculatePriceForOrder(account.currentOrder);
+
+    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)}, which will cost $${currentOrderCost} to print. If you want us to print them, just write "Send it!" and we'll send your order.`;
   }
 
   public handlePricingMessage(account: IPpAccount) {
@@ -57,7 +59,9 @@ export class MessageActuator {
   }
 
   public unknownMessageResponse() {
-    return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!". If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
+    return `Sorry, I'm a robot and I can't understand everything right now.
+    If you want to print your order, write "Send it!"
+    If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
   }
 
   public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
