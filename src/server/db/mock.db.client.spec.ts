@@ -17,7 +17,7 @@ export class MockDbClient extends DbClient {
     });
   }
 
-  public createAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
+  public createOrUpdateAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
     return new Promise((resolve) => {
       this.accounts.set(newAccount.phone, newAccount as any);
       const foundAccount = this.accounts.get(newAccount.phone);

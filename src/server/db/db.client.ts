@@ -32,8 +32,15 @@ export class DbClient {
     return Account.findOne({ phone }).then();
   }
 
-  public createAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
-    return Account.create(newAccount);
+  public createOrUpdateAccount(newAccount: IEntryPpAccount): Promise<IPpAccount> {
+    return this.loadAccountByPhone(newAccount.phone)
+      .then((existingAccount) => {
+        if (existingAccount) {
+          existingAccount.set(newAccount);
+          return existingAccount.save();
+        }
+        return Account.create(newAccount);
+      });
   }
 
   public createAccountFromPhone(phone: string): Promise<IPpAccount> {

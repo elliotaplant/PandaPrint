@@ -14,7 +14,8 @@ export class SignupActuator {
     // Check if customer already exists
     return this.dbClient.loadAccountByPhone(this.sanitizePhone(signupAccountReq.phone))
       .then((foundAccount) => {
-        if (foundAccount) {
+        // If the found account isn't full, this is a duplicate signup
+        if (foundAccount && foundAccount.email && foundAccount.stripeCustId) {
           throw new Error(ErrorCode.AccountWithPhoneAlreadyExists);
         }
       })
@@ -25,7 +26,7 @@ export class SignupActuator {
       // Sanitize the phone number in the request
       .then((signupReqWithStripe) => this.accountReqSanitizePhone(signupReqWithStripe))
       // Create the account in the DB
-      .then((entryPpAcctReq) => this.dbClient.createAccount(entryPpAcctReq))
+      .then((entryPpAcctReq) => this.dbClient.createOrUpdateAccount(entryPpAcctReq))
       // Send the welcome message to new user
       .then((createdAccount) => ({ message: this.signupWelcomeMessage(createdAccount), phone: createdAccount.phone }))
       .then(({ message, phone }) => this.twilioClient.sendMessageToPhone(message, phone));

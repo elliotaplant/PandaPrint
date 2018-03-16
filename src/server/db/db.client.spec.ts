@@ -61,7 +61,7 @@ describe('Db Client', () => {
         previousOrders: [],
       };
 
-      dbClient.createAccount(soljaBoi)
+      dbClient.createOrUpdateAccount(soljaBoi)
         .then((createdAccount) => {
           expect(createdAccount.phone).to.equal(soljaBoi.phone);
           expect(createdAccount.email).to.equal(soljaBoi.email);
