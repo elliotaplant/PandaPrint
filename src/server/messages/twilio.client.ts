@@ -17,19 +17,19 @@ export class TwilioClient {
 
   public sendMessageToPhone(message: string, phone: string) {
     // Don't actually send messages in dev mode
-    if (process.argv.includes('--dev')) {
+    if (Utils.isDevEnv()) {
       return Promise.resolve({});
     }
 
     return new Promise((resolve, reject) => {
       this.twilio.messages
-      .create({
-        body: message,
-        from: '+14155793449', // Put this in an env variable
-        to: phone,
-      })
-      .then(resolve)
-      .catch(reject);
+        .create({
+          body: message,
+          from: Utils.twilioPhoneNum(),
+          to: phone,
+        })
+        .then(resolve)
+        .catch(reject);
     });
   }
 }

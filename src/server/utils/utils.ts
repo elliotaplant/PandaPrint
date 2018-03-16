@@ -60,11 +60,19 @@ export class Utils {
     }
   }
 
-  public static getEnv() {
-    return Utils.safeGet(() => process.env.BUILD_ENVIRONMENT === Env.PROD ? Env.PROD : Env.DEV, Env.DEV);
+  public static isDevEnv() {
+    return process.env.BUILD_ENV !== Env.PROD;
+  }
+
+  public static isProdEnv() {
+    return process.env.BUILD_ENV === Env.PROD;
   }
 
   public static origin() {
-    return Utils.getEnv() === Env.DEV ? `http://localhost:8080` : `https://www.pandaprint.co`;
+    return Utils.isDevEnv() ? `http://localhost:8080` : `https://www.pandaprint.co`;
+  }
+
+  public static twilioPhoneNum() {
+    return '+14155793449';
   }
 }
