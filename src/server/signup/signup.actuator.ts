@@ -28,22 +28,17 @@ export class SignupActuator {
       // Create the account in the DB
       .then((entryPpAcctReq) => this.dbClient.createOrUpdateAccount(entryPpAcctReq))
       // Send the welcome message to new user
-      .then((createdAccount) => ({ message: this.signupWelcomeMessage(createdAccount), phone: createdAccount.phone }))
-      .then(({ message, phone }) => this.twilioClient.sendMessageToPhone(message, phone));
+      .then((createdAccount) => this.sendWelcomeMessage(createdAccount));
   }
 
   // private methods
-  private sendWelcomeMessages(account: IPpAccount) {
-    const welcomeMessage = this.signupWelcomeMessage(account);
-    const pricingWelcome = this.pricingWelcomeMessage(account);
+  private sendWelcomeMessage(account: IPpAccount) {
+    return this.twilioClient.sendMessageToPhone(account.phone, this.signupWelcomeMessage(account));
   }
 
   private signupWelcomeMessage(account: IPpAccount): string {
-    return `Hi ${account.firstName}! Welcome to Panda Print. We'll save all of the photos you send us, and when you're ready to print them, just write us a message that says "Send it!"`;
-  }
-
-  private pricingWelcomeMessage(account: IPpAccount): string {
-    return `Orders cost just ${BillingActuator.shippingPriceString()} to ship and each print costs just ${BillingActuator.photosPriceString()}. We won't charge your card until you ask us to print your photos. If you have any questions, please send an email to support@pandaprint.co or send a message to Elliot at (510) 917-5552`;
+    return `Hi ${account.firstName}! Welcome to Panda Print. We'll save all of the photos you send us, and when you're ready to print them, just write us a message that says "Send it!"
+    Orders cost just ${BillingActuator.shippingPriceString()} to ship and each print costs just ${BillingActuator.photosPriceString()}. We won't charge your card until you ask us to print your photos. If you have any questions, please send an email to support@pandaprint.co or send a message to Elliot at (510) 917-5552`;
   }
 
   private accountReqSanitizePhone(signupWithStripeId: ISignupWithStripeId): ISignupWithStripeId {
