@@ -26,7 +26,7 @@ export class MessageActuator {
     // Pull up user account from database
     return this.dbClient.loadAccountByPhone(ppTwilioBody.phone)
       .then((account) => {
-        if (account) {
+        if (account && account.email && account.stripeCustId) {
           return this.handleMsgForExistingAccount(ppTwilioBody, account);
         } else {
           return this.handleMsgForNonExistantAccount(ppTwilioBody, ppTwilioBody.phone);
@@ -83,13 +83,15 @@ export class MessageActuator {
   public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
     const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
     const itThem = twilioBody.mediaUrls.length === 1 ? 'it' : 'them';
-    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${itThem} until you're ready to print. When you have a chance, head over to www.pandaprint.co/#${twilioBody.phone} to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+    const preamble = `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${itThem} until you're ready to print.`;
+    const postamble = this.noAccountPostAmble(twilioBody);
+    return `${preamble} ${postamble}`;
   }
 
   public welcomeNoPicturesMessage(twilioBody: PpTwilioBody): string {
-    const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
-    const itThem = twilioBody.mediaUrls.length === 1 ? 'it' : 'them';
-    return `You've reached Panda Print! If you send us pictures, we'll print them out and mail them to you. When you have a chance, head over to www.pandaprint.co/#${twilioBody.phone} to easily add your info, then write us a message that includes "Send it" and your pictures will be printed and on their way!`;
+    const postamble = this.noAccountPostAmble(twilioBody);
+    const preamble = `You've reached Panda Print! If you send us pictures, we'll print them out and mail them to you.`;
+    return `${preamble} ${postamble}`;
   }
 
   // private methods
@@ -149,6 +151,10 @@ export class MessageActuator {
         return Promise.resolve(this.unknownAddressMessage);
       }
     }
+  }
+
+  private noAccountPostAmble(twilioBody: PpTwilioBody) {
+    return `When you have a chance, head over to www.pandaprint.co/#${twilioBody.phone} to easily add your info, then write us a message that includes "Send it" and your pictures will be printed and on their way!`;
   }
 
   private isFullAccount(account: IPpAccount) {
