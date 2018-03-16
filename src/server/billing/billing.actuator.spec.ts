@@ -34,6 +34,11 @@ describe('Billing Actuator', () => {
       const calculatedPrice = billingActuator.calculatePriceForOrder(emptyOrder);
       expect(calculatedPrice).to.equal(0);
     });
+
+    it('should display shipping price appropriately', () => {
+      const shippingPriceString = BillingActuator.shippingPriceString();
+      expect(shippingPriceString).to.equal('$3.49');
+    });
   });
 
   describe('Customer charging', () => {

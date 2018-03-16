@@ -1,4 +1,4 @@
-import { StripeClient } from '../billing';
+import { BillingActuator, StripeClient } from '../billing';
 import { DbClient, IEntryPpAccount, IPpAccount } from '../db';
 import { ErrorActuator, ErrorCode } from '../error';
 import { MessageActuator, TwilioClient } from '../messages';
@@ -33,8 +33,17 @@ export class SignupActuator {
   }
 
   // private methods
+  private sendWelcomeMessages(account: IPpAccount) {
+    const welcomeMessage = this.signupWelcomeMessage(account);
+    const pricingWelcome = this.pricingWelcomeMessage(account);
+  }
+
   private signupWelcomeMessage(account: IPpAccount): string {
-    return `Welcome to Panda Print ${account.firstName}! Try sending us a picture to print.`;
+    return `Hi ${account.firstName}! Welcome to Panda Print. We'll save all of the photos you send us, and when you're ready to print them, just write us a message that says "Send it!"`;
+  }
+
+  private pricingWelcomeMessage(account: IPpAccount): string {
+    return `Orders cost just ${BillingActuator.shippingPriceString()} to ship and each print costs just ${BillingActuator.photosPriceString()}. We won't charge your card until you ask us to print your photos. If you have any questions, please send an email to support@pandaprint.co or send a message to Elliot at (510) 917-5552`;
   }
 
   private accountReqSanitizePhone(signupWithStripeId: ISignupWithStripeId): ISignupWithStripeId {
