@@ -57,9 +57,7 @@ export class MessageActuator {
   }
 
   public unknownMessageResponse() {
-    return `Sorry, I'm a robot and I can't understand everything right now.
-    If you want to print your order, write "Send it!"
-    If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send an email to support@pandaprint.co or write a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
+    return `Sorry, I'm a robot and I can't understand everything right now. If you want to print your order, write "Send it!" If you want to know our prices and the price of your order, write "Pricing". For anything else, send an email to support@pandaprint.co or write a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
   }
 
   public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
