@@ -1,13 +1,13 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
 
 import { BillingActuator, StripeClient } from '../billing';
 import { DbClient, IPpAccount } from '../db';
 import { ErrorActuator } from '../error';
 import { MessageActuator, TwilioClient } from '../messages';
 import { PwintyClient } from '../printing';
-import { SignupActuator } from '../signup';
+import { ISignupAccountRequest, SignupActuator } from '../signup';
 import { StatusActuator } from '../status';
 
 export class Server {
@@ -37,7 +37,7 @@ export class Server {
     this.statusActuator = new StatusActuator(this.dbClient);
     this.billingActuator = new BillingActuator(this.stripeClient);
     this.messageActuator = new MessageActuator(this.dbClient, this.pwintyClient, this.billingActuator);
-    this.signupActuator = new SignupActuator(this.dbClient, this.stripeClient);
+    this.signupActuator = new SignupActuator(this.dbClient, this.stripeClient, this.twilioClient);
   }
 
   public init() {
@@ -69,7 +69,7 @@ export class Server {
     });
 
     // Recieve post requests to the /sms endpoint
-    this.app.post('/sms', (req: any, res: any) => {
+    this.app.post('/sms', (req: Request, res: Response) => {
       res.set('Content-Type', 'text/plain');
       // Handle message with message actuator
       this.messageActuator.handleMessage(req.body)
@@ -80,11 +80,10 @@ export class Server {
         });
     });
 
-    this.app.post('/signup', (req: any, res: any) => {
+    this.app.post('/signup', (req: { body: ISignupAccountRequest }, res: Response) => {
       // Save user to DB
       // This should all be in the signup actuator
       this.signupActuator.handleSignup(req.body)
-        .then(({ message, phone }) => this.twilioClient.sendMessageToPhone(message, phone))
         .then(() => res.sendStatus(200))
         .catch((error) => {
           const defaultMessage = 'Failed to sign up user';

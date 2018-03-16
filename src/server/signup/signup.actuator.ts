@@ -1,16 +1,16 @@
 import { StripeClient } from '../billing';
 import { DbClient, IEntryPpAccount, IPpAccount } from '../db';
 import { ErrorActuator, ErrorCode } from '../error';
-import { MessageActuator } from '../messages';
+import { MessageActuator, TwilioClient } from '../messages';
 import { ISignupAccountRequest, ISignupMessageSend, ISignupWithStripeId } from './types';
 /**
  * Actuator for signups from the front end
  */
 export class SignupActuator {
-  constructor(private dbClient: DbClient, private stripeClient: StripeClient) { }
+  constructor(private dbClient: DbClient, private stripeClient: StripeClient, private twilioClient: TwilioClient) { }
 
   // This can be better
-  public handleSignup(signupAccountReq: ISignupAccountRequest): Promise<ISignupMessageSend> {
+  public handleSignup(signupAccountReq: ISignupAccountRequest) {
     // Check if customer already exists
     return this.dbClient.loadAccountByPhone(this.sanitizePhone(signupAccountReq.phone))
       .then((foundAccount) => {
@@ -26,11 +26,9 @@ export class SignupActuator {
       .then((signupReqWithStripe) => this.accountReqSanitizePhone(signupReqWithStripe))
       // Create the account in the DB
       .then((entryPpAcctReq) => this.dbClient.createAccount(entryPpAcctReq))
-      // Return the welcome message to send to user
-      .then((createdAccount) => ({
-        message: this.signupWelcomeMessage(createdAccount),
-        phone: createdAccount.phone,
-      }));
+      // Send the welcome message to new user
+      .then((createdAccount) => ({ message: this.signupWelcomeMessage(createdAccount), phone: createdAccount.phone }))
+      .then(({ message, phone }) => this.twilioClient.sendMessageToPhone(message, phone));
   }
 
   // private methods

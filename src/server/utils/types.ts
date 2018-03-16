@@ -8,3 +8,8 @@ export type ApiKey =
   'PWINTY_ENV' |
   'STRIPE_PUBLISHABLE_KEY' |
   'STRIPE_SECRET_KEY';
+
+export enum Env {
+  DEV = 'DEV',
+  PROD = 'PROD',
+}

@@ -1,4 +1,4 @@
-import { ApiKey } from './types';
+import { ApiKey, Env } from './types';
 const keys = require('../../../keys.json');
 // Utility methods that aren't in lodash
 
@@ -58,5 +58,13 @@ export class Utils {
 
       return prodKey || devKey;
     }
+  }
+
+  public static getEnv() {
+    return Utils.safeGet(() => process.env.BUILD_ENVIRONMENT === Env.PROD ? Env.PROD : Env.DEV, Env.DEV);
+  }
+
+  public static origin() {
+    return Utils.getEnv() === Env.DEV ? `http://localhost:8080` : `https://www.pandaprint.co`;
   }
 }
