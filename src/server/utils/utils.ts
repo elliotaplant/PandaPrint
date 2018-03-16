@@ -60,6 +60,10 @@ export class Utils {
     }
   }
 
+  public static toUsd(price: number) {
+    return `$${price.toFixed(2)}`;
+  }
+
   public static isDevEnv() {
     return process.env.BUILD_ENV !== Env.PROD;
   }

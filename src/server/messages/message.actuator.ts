@@ -13,8 +13,6 @@ import { ITwilioBody } from './types';
 export class MessageActuator {
   public readonly errorApology = 'Oh no! Something went wrong on our end. In the meantime, you can reach out to Elliot at (510) 917-5552 if you have any questions';
 
-  public readonly welcomeNoPictures = `You've reached Panda Print! If you send us pictures, we'll print them out and send them to you. Give it a try now!`;
-
   public readonly unknownAddressMessage = `Unfortunately we can't send your order until we have your address. Could you go to www.PandaPrint.co to sign up? Thanks!`;
 
   constructor(private dbClient: DbClient, private pwintyClient: PwintyClient,
@@ -46,7 +44,7 @@ export class MessageActuator {
     const numPicsInOrder = account.currentOrder.pictureUrls.length;
     const currentOrderCost = this.billingActuator.calculatePriceForOrder(account.currentOrder);
 
-    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)}, which will cost $${currentOrderCost} to print. If you want us to print them, just write "Send it!" and we'll send your order.`;
+    return `We saved your picture${Utils.sIfPlural(twilioBody.mediaUrls.length)}! Your order now has ${numPicsInOrder} picture${Utils.sIfPlural(numPicsInOrder)}, which will cost ${Utils.toUsd(currentOrderCost)} to print. If you want us to print them, just write "Send it!" and we'll send your order.`;
   }
 
   public handlePricingMessage(account: IPpAccount) {
@@ -61,7 +59,7 @@ export class MessageActuator {
   public unknownMessageResponse() {
     return `Sorry, I'm a robot and I can't understand everything right now.
     If you want to print your order, write "Send it!"
-    If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
+    If you want to know our prices and the price of your order, write "How much will my order cost?" or "Pricing". For anything else, send an email to support@pandaprint.co or write a message to Elliot at (510) 917-5552 and he'll get back to you as soon as possible.`;
   }
 
   public savedAndSendingMessage(twilioBody: PpTwilioBody, account: IPpAccount): string {
@@ -84,7 +82,14 @@ export class MessageActuator {
 
   public welcomeWithPicturesMessage(twilioBody: PpTwilioBody): string {
     const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
-    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${twilioBody.mediaUrls.length === 1 ? 'it' : 'them'} until you're ready to print them. When you have a chance, head over to www.pandaprint.co to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+    const itThem = twilioBody.mediaUrls.length === 1 ? 'it' : 'them';
+    return `Thanks for sending your picture${optionalS} to Panda Print! We'll save ${itThem} until you're ready to print. When you have a chance, head over to www.pandaprint.co/#${twilioBody.phone} to easily add your info, then write us a message that includes "Send it!" and your pictures will be printed and on their way!`;
+  }
+
+  public welcomeNoPicturesMessage(twilioBody: PpTwilioBody): string {
+    const optionalS = Utils.sIfPlural(twilioBody.mediaUrls.length);
+    const itThem = twilioBody.mediaUrls.length === 1 ? 'it' : 'them';
+    return `You've reached Panda Print! If you send us pictures, we'll print them out and mail them to you. When you have a chance, head over to www.pandaprint.co/#${twilioBody.phone} to easily add your info, then write us a message that includes "Send it" and your pictures will be printed and on their way!`;
   }
 
   // private methods
@@ -116,7 +121,7 @@ export class MessageActuator {
         if (twilioBody.hasPictures) {
           return this.welcomeWithPicturesMessage(twilioBody);
         } else {
-          return this.welcomeNoPictures;
+          return this.welcomeNoPicturesMessage(twilioBody);
         }
       });
   }

@@ -11,10 +11,10 @@ export class BillingActuator {
 
   // Get the shipping prices as a formatted string with $
   public static shippingPriceString() {
-    return `$${BillingActuator.shippingPrice.toFixed(2)}`;
+    return Utils.toUsd(BillingActuator.shippingPrice);
   }
   public static photosPriceString() {
-    return `$${BillingActuator.pricePerPhoto.toFixed(2)}`;
+    return Utils.toUsd(BillingActuator.pricePerPhoto);
   }
 
   constructor(private stripeClient: StripeClient) { }
